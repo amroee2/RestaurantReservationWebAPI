@@ -6,8 +6,8 @@
         Customer,
         Employee,
         MenuItem,
-        Order,
         Reservation,
+        Order,
         OrderItem,
         Restaurant,
         Table

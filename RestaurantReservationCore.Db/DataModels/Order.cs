@@ -14,5 +14,10 @@
         {
             OrderItems = new List<OrderItem>();
         }
+
+        public override string ToString()
+        {
+            return $"Order Id: {OrderId}, Order Date: {OrderDate}, Total Amount: {TotalAmount}, EmployeeId: {EmployeeId}, ReservationId: {ReservationId}";
+        }
     }
 }

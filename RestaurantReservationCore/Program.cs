@@ -39,6 +39,10 @@ static void HandleRequest(EntityOptions option)
             OrderItemUI orderItemUI = new OrderItemUI(new OrderItemService(new OrderItemRepository(restaurantReservationDbContext)));
             orderItemUI.DisplayOptions();
             break;
+        case EntityOptions.Order:
+            OrderUI orderUI = new OrderUI(new OrderService(new OrderRepository(restaurantReservationDbContext)));
+            orderUI.DisplayOptions();
+            break;
     }
 }
 
