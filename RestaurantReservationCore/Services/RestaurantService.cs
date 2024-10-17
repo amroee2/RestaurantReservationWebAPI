@@ -1,7 +1,7 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories;
 
-namespace RestaurantReservation.Services
+namespace RestaurantReservationCore.Services
 {
     public class RestaurantService
     {
