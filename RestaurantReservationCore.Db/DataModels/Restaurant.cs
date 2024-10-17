@@ -18,5 +18,10 @@
             Reservations = new List<Reservation>();
             MenuItems = new List<MenuItem>();
         }
+
+        public override string ToString()
+        {
+            return $"{RestaurantId}, {Name}, {Address}, {PhoneNumber}, {OpeningHours}";
+        }
     }
 }

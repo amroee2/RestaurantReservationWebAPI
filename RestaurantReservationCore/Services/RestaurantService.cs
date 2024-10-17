@@ -12,24 +12,54 @@ namespace RestaurantReservationCore.Services
             _restaurantRepository = restaurantRepository;
         }
 
-        public async Task<List<Restaurant>> GetAllRestaurantsAsync()
+        public async Task GetAllRestaurantsAsync()
         {
-            return await _restaurantRepository.GetAllAsync();
+            var restaurants = await _restaurantRepository.GetAllAsync();
+            if (!restaurants.Any())
+            {
+                Console.WriteLine("No restaurants found");
+                return;
+            }
+            foreach (var restaurant in restaurants)
+            {
+                Console.WriteLine(restaurant);
+            }
         }
 
-        public async Task<Restaurant> GetRestaurantByIdAsync(int id)
+        public async Task GetRestaurantByIdAsync(int id)
         {
-            return await _restaurantRepository.GetByIdAsync(id);
+            var restaurant = await _restaurantRepository.GetByIdAsync(id);
+            if (restaurant == null)
+            {
+                Console.WriteLine("Restaurant doesn't exist");
+                return;
+            }
+            Console.WriteLine(restaurant);
         }
 
         public async Task AddRestaurantAsync(Restaurant restaurant)
         {
+            var existingRestaurant = await _restaurantRepository.GetByIdAsync(restaurant.RestaurantId);
+            if (existingRestaurant != null)
+            {
+                Console.WriteLine("Restaurant already exists");
+                return;
+            }
             await _restaurantRepository.AddAsync(restaurant);
         }
 
-        public async Task UpdateRestaurantAsync(Restaurant restaurant)
+        public async Task UpdateRestaurantAsync(int id, Restaurant restaurant)
         {
-            await _restaurantRepository.UpdateAsync(restaurant);
+            var updatedRestaurant = await _restaurantRepository.GetByIdAsync(id);
+            if (updatedRestaurant == null)
+            {
+                Console.WriteLine("Restaurant doesn't exist");
+            }
+            updatedRestaurant.Name = restaurant.Name;
+            updatedRestaurant.Address = restaurant.Address;
+            updatedRestaurant.PhoneNumber = restaurant.PhoneNumber;
+            updatedRestaurant.OpeningHours = restaurant.OpeningHours;
+            await _restaurantRepository.UpdateAsync(updatedRestaurant);
         }
 
         public async Task DeleteRestaurantAsync(int id)
