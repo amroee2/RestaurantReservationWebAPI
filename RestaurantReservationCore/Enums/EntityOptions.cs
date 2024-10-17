@@ -6,9 +6,9 @@
         Customer,
         Employee,
         MenuItem,
-        OrderItem,
         Order,
         Reservation,
+        OrderItem,
         Restaurant,
         Table
     }
