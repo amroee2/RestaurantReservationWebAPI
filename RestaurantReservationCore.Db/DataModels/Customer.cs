@@ -1,4 +1,4 @@
-﻿namespace RestaurantReservation.Db.DataModels
+﻿namespace RestaurantReservationCore.Db.DataModels
 {
     public class Customer
     {
