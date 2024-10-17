@@ -16,5 +16,10 @@
         {
             Orders = new List<Order>();
         }
+
+        public override string ToString()
+        {
+            return $"Reservation Id: {ReservationId}, Reservation Date: {ReservationDate}, Party Size: {PartySize}, CustomerId: {CustomerId}, TableId: {TableId}, RestaurantId: {RestaurantId}";
+        }
     }
 }

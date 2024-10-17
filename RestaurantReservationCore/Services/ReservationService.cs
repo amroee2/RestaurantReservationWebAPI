@@ -5,31 +5,63 @@ namespace RestaurantReservationCore.Services
 {
     public class ReservationService
     {
-        private readonly IRepository<Reservation> _reservationRepository;
+        private readonly IReservationRepository _reservationRepository;
 
-        public ReservationService(IRepository<Reservation> reservationRepository)
+        public ReservationService(IReservationRepository reservationRepository)
         {
             _reservationRepository = reservationRepository;
         }
 
-        public async Task<List<Reservation>> GetAllReservationsAsync()
+        public async Task GetAllReservationsAsync()
         {
-            return await _reservationRepository.GetAllAsync();
+            List<Reservation> reservations =  await _reservationRepository.GetAllAsync();
+            if (!reservations.Any())
+            {
+                Console.WriteLine("No reservations found");
+                return;
+            }
+            foreach (var reservation in reservations)
+            {
+                Console.WriteLine(reservation);
+            }
         }
 
-        public async Task<Reservation> GetReservationByIdAsync(int id)
+        public async Task GetReservationByIdAsync(int id)
         {
-            return await _reservationRepository.GetByIdAsync(id);
+            Reservation reservation =  await _reservationRepository.GetByIdAsync(id);
+            if (reservation == null)
+            {
+                Console.WriteLine("Reservation not found");
+                return;
+            }
+            Console.WriteLine(reservation);
         }
 
         public async Task AddReservationAsync(Reservation reservation)
         {
+            var existingReservation = await _reservationRepository.GetByIdAsync(reservation.ReservationId);
+            if (existingReservation != null)
+            {
+                Console.WriteLine("Reservation already exists");
+                return;
+            }
             await _reservationRepository.AddAsync(reservation);
         }
 
-        public async Task UpdateReservationAsync(Reservation reservation)
+        public async Task UpdateReservationAsync(int id,Reservation reservation)
         {
-            await _reservationRepository.UpdateAsync(reservation);
+            var updatedReservation = await _reservationRepository.GetByIdAsync(id);
+            if (updatedReservation == null)
+            {
+                Console.WriteLine("Reservation doesn't exist");
+                return;
+            }
+            updatedReservation.ReservationDate = reservation.ReservationDate;
+            updatedReservation.PartySize = reservation.PartySize;
+            updatedReservation.CustomerId = reservation.CustomerId;
+            updatedReservation.TableId = reservation.TableId;
+            updatedReservation.RestaurantId = reservation.RestaurantId;
+            await _reservationRepository.UpdateAsync(updatedReservation);
         }
 
         public async Task DeleteReservationAsync(int id)
@@ -40,6 +72,23 @@ namespace RestaurantReservationCore.Services
                 Console.WriteLine("Reservation doesn't exist");
             }
             await _reservationRepository.DeleteAsync(reservation);
+        }
+
+        public async Task GetAllReservationsByCustomerIdAsync(int customerId)
+        {
+            List<Reservation> reservations = await _reservationRepository.GetReservationsByCustomerIdAsync(customerId);
+            if (!reservations.Any())
+            {
+                Console.WriteLine("No reservations found");
+                return;
+            }
+            foreach (var reservation in reservations)
+            {
+                if (reservation.CustomerId == customerId)
+                {
+                    Console.WriteLine(reservation);
+                }
+            }
         }
     }
 }
