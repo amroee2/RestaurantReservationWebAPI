@@ -16,7 +16,7 @@ namespace RestaurantReservationCore.Services
         public async Task GetAllCustomersAsync()
         {
             List<Customer> customers =  await _customerRepository.GetAllAsync();
-            if(customers.Count == 0)
+            if(!customers.Any())
             {
                 Console.WriteLine("No customers found");
                 return;
