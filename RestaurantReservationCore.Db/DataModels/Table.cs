@@ -11,6 +11,11 @@
         {
             Reservations = new List<Reservation>();
         }
+
+        public override string ToString()
+        {
+            return $"Table Id: {TableId}, Capacity: {Capacity}, RestaurantId: {RestaurantId}";
+        }
     }
 
 }

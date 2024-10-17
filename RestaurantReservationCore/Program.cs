@@ -51,6 +51,10 @@ static void HandleRequest(EntityOptions option)
             RestaurantUI restaurantUI = new RestaurantUI(new RestaurantService(new RestaurantRepository(restaurantReservationDbContext)));
             restaurantUI.DisplayOptions();
             break;
+        case EntityOptions.Table:
+            TableUI tableUI = new TableUI(new TableService(new TableRepository(restaurantReservationDbContext)));
+            tableUI.DisplayOptions();
+            break;
     }
 }
 
