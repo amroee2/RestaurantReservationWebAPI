@@ -1,25 +1,41 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories;
+using RestaurantReservationCore.UI;
 
 namespace RestaurantReservationCore.Services
 {
     public class EmployeeService
     {
-        private readonly IRepository<Employee> _employeeRepository;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public EmployeeService(IRepository<Employee> employeeRepository)
+        public EmployeeService(IEmployeeRepository employeeRepository)
         {
             _employeeRepository = employeeRepository;
         }
 
-        public async Task<List<Employee>> GetAllEmployeesAsync()
+        public async Task GetAllEmployeesAsync()
         {
-            return await _employeeRepository.GetAllAsync();
+            List<Employee> employees = await _employeeRepository.GetAllAsync();
+            if(!employees.Any())
+            {
+                Console.WriteLine("No employees found");
+                return;
+            }
+            foreach (var employee in employees)
+            {
+                Console.WriteLine(employee);
+            }
         }
 
-        public async Task<Employee> GetEmployeeByIdAsync(int id)
+        public async Task GetEmployeeByIdAsync(int id)
         {
-            return await _employeeRepository.GetByIdAsync(id);
+            Employee employee =  await _employeeRepository.GetByIdAsync(id);
+            if (employee == null)
+            {
+                Console.WriteLine("Employee not found");
+                return;
+            }
+            Console.WriteLine(employee);
         }
 
         public async Task AddEmployeeAsync(Employee employee)
@@ -27,19 +43,50 @@ namespace RestaurantReservationCore.Services
             await _employeeRepository.AddAsync(employee);
         }
 
-        public async Task UpdateEmployeeAsync(Employee employee)
+        public async Task UpdateEmployeeAsync(int id, Employee employee)
         {
-            await _employeeRepository.UpdateAsync(employee);
+            Employee updatedEmployee = await _employeeRepository.GetByIdAsync(id);
+            if (updatedEmployee == null)
+            {
+                Console.WriteLine("Customer not found");
+                return;
+            }
+            updatedEmployee.FirstName = employee.FirstName;
+            updatedEmployee.LastName = employee.LastName;
+            updatedEmployee.Position = employee.Position;
+            updatedEmployee.RestaurantId = employee.RestaurantId;
+            await _employeeRepository.UpdateAsync(updatedEmployee);
         }
 
         public async Task DeleteEmployeeAsync(int id)
         {
             var employee = await _employeeRepository.GetByIdAsync(id);
-            if(employee == null)
+            if (employee == null)
             {
                 Console.WriteLine("Employee doesn't exist");
             }
             await _employeeRepository.DeleteAsync(employee);
+        }
+
+        public async Task GetAllManagersAsync()
+        {
+            List<Employee> employees =  await _employeeRepository.ListAllManagers();
+            if (!employees.Any())
+            {
+                Console.WriteLine("No managers found");
+                return;
+            }
+            foreach (var employee in employees)
+            {
+                Console.WriteLine(employee);
+            }
+        }
+
+        public async Task CalculateAverageOrderAmount(int employeeId)
+        {
+            double totalAmount = await _employeeRepository.EmployeeTotalAmount(employeeId);
+            int numberOfOrders = await _employeeRepository.NumberOfOrders(employeeId);
+            Console.WriteLine(totalAmount/numberOfOrders);
         }
     }
 }
