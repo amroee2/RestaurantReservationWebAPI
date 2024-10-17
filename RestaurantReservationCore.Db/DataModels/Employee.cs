@@ -13,5 +13,10 @@
         {
             Orders = new List<Order>();
         }
+
+        public override string ToString()
+        {
+            return $"{EmployeeId}, {FirstName}, {LastName}, {Position}, {RestaurantId}";
+        }
     }
 }
