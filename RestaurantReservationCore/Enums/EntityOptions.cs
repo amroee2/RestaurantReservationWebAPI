@@ -4,12 +4,12 @@
     {
         Exit,
         Customer,
-        Reservation,
-        Table,
-        Restaurant,
-        Order,
-        OrderItem,
+        Employee,
         MenuItem,
-        Employee
+        OrderItem,
+        Order,
+        Reservation,
+        Restaurant,
+        Table
     }
 }
