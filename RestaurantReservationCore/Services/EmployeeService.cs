@@ -54,7 +54,7 @@ namespace RestaurantReservationCore.Services
             Employee updatedEmployee = await _employeeRepository.GetByIdAsync(id);
             if (updatedEmployee == null)
             {
-                Console.WriteLine("Customer not found");
+                Console.WriteLine("Employee not found");
                 return;
             }
             updatedEmployee.FirstName = employee.FirstName;
@@ -70,6 +70,7 @@ namespace RestaurantReservationCore.Services
             if (employee == null)
             {
                 Console.WriteLine("Employee doesn't exist");
+                return;
             }
             await _employeeRepository.DeleteAsync(employee);
         }

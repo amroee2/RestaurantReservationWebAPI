@@ -53,7 +53,7 @@ namespace RestaurantReservationCore.Services
             MenuItem updatedItem = await _menuItemRepository.GetByIdAsync(id);
             if (updatedItem == null)
             {
-                Console.WriteLine("Customer not found");
+                Console.WriteLine("Menu Item not found");
                 return;
             }
             updatedItem.Name = menuItem.Name;
@@ -69,6 +69,7 @@ namespace RestaurantReservationCore.Services
             if (menuItem == null)
             {
                 Console.WriteLine("Menu item doesn't exist");
+                return;
             }
             await _menuItemRepository.DeleteAsync(menuItem);
         }

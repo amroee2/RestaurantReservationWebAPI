@@ -38,6 +38,12 @@ namespace RestaurantReservationCore.Services
 
         public async Task AddOrderAsync(Order order)
         {
+            Order requestedOrder = await _orderRepository.GetByIdAsync(order.OrderId);
+            if (requestedOrder != null)
+            {
+                Console.WriteLine("Order already exists");
+                return;
+            }
             await _orderRepository.AddAsync(order);
         }
 
@@ -46,7 +52,7 @@ namespace RestaurantReservationCore.Services
             Order updatedOrder = await _orderRepository.GetByIdAsync(id);
             if (updatedOrder == null)
             {
-                Console.WriteLine("Customer not found");
+                Console.WriteLine("Order not found");
                 return;
             }
             updatedOrder.OrderDate = order.OrderDate;
@@ -62,6 +68,7 @@ namespace RestaurantReservationCore.Services
             if (order == null)
             {
                 Console.WriteLine("Order doesn't exist");
+                return;
             }
             await _orderRepository.DeleteAsync(order);
         }

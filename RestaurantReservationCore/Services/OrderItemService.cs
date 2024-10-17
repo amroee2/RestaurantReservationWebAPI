@@ -55,7 +55,7 @@ namespace RestaurantReservationCore.Services
             OrderItem updatedOrderItem = await _orderItemRepository.GetByIdAsync(id);
             if (updatedOrderItem == null)
             {
-                Console.WriteLine("Customer not found");
+                Console.WriteLine("Order Item not found");
                 return;
             }
             updatedOrderItem.Quantity = orderItem.Quantity;
@@ -70,6 +70,7 @@ namespace RestaurantReservationCore.Services
             if (orderItem == null)
             {
                 Console.WriteLine("Order item doesn't exist");
+                return;
             }
             await _orderItemRepository.DeleteAsync(orderItem);
         }

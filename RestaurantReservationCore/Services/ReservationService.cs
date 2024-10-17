@@ -70,6 +70,7 @@ namespace RestaurantReservationCore.Services
             if (reservation == null)
             {
                 Console.WriteLine("Reservation doesn't exist");
+                return;
             }
             await _reservationRepository.DeleteAsync(reservation);
         }

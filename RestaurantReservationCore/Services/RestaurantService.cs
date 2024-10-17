@@ -54,6 +54,7 @@ namespace RestaurantReservationCore.Services
             if (updatedRestaurant == null)
             {
                 Console.WriteLine("Restaurant doesn't exist");
+                return;
             }
             updatedRestaurant.Name = restaurant.Name;
             updatedRestaurant.Address = restaurant.Address;
@@ -68,6 +69,7 @@ namespace RestaurantReservationCore.Services
             if (restaurant == null)
             {
                 Console.WriteLine("Restaurant doesn't exist");
+                return;
             }
             await _restaurantRepository.DeleteAsync(restaurant);
         }
