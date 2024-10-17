@@ -5,8 +5,8 @@ using RestaurantReservationCore.Services;
 using RestaurantReservationCore.UI;
 
 Console.WriteLine("Welcome to the system!");
-Console.WriteLine("1- Customer\n2- Employee\n3- Restaruant\n4- Reservation\n5- Order\n" +
-    "6- Order Item\n7- Menu Item\n8- Table\n ");
+Console.WriteLine("1- Customer\n2- Employee\n3- Menu Item\n4- Reservation\n5- Order\n" +
+    "6- Order Item\n7- Restaurant\n8- Table\n ");
 
 try
 {
@@ -27,7 +27,14 @@ static void HandleRequest(EntityOptions option)
             CustomerUI customerUI = new CustomerUI(new CustomerService(new CustomerRepository(restaurantReservationDbContext)));
             customerUI.DisplayOptions();
             break;
-
+        case EntityOptions.Employee:
+            EmployeeUI employeeUI = new EmployeeUI(new EmployeeService(new EmployeeRepository(restaurantReservationDbContext)));
+            employeeUI.DisplayOptions();
+            break;
+        case EntityOptions.MenuItem:
+            MenuItemUI menuItemUI = new MenuItemUI(new MenuItemService(new MenuItemRepository(restaurantReservationDbContext)));
+            menuItemUI.DisplayOptions();
+            break;
     }
 }
 

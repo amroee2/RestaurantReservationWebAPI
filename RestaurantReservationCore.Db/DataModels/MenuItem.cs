@@ -13,5 +13,10 @@
         {
             OrderItems = new List<OrderItem>();
         }
+
+        public override string ToString()
+        {
+            return $"{MenuItemId}, {Name}, {Price}, {Description}, {RestaurantId}";
+        }
     }
 }
