@@ -40,6 +40,12 @@ namespace RestaurantReservationCore.Services
 
         public async Task AddCustomerAsync(Customer customer)
         {
+            Customer requestedCustomer = await _customerRepository.GetByIdAsync(customer.CustomerId);
+            if (requestedCustomer != null)
+            {
+                Console.WriteLine("Customer already exists");
+                return;
+            }
             await _customerRepository.AddAsync(customer);
         }
 

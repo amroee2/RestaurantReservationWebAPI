@@ -40,6 +40,12 @@ namespace RestaurantReservationCore.Services
 
         public async Task AddEmployeeAsync(Employee employee)
         {
+            Employee requestedEmployee1 = await _employeeRepository.GetByIdAsync(employee.EmployeeId);
+            if (requestedEmployee1 != null)
+            {
+                Console.WriteLine("Employee already exists");
+                return;
+            }
             await _employeeRepository.AddAsync(employee);
         }
 
