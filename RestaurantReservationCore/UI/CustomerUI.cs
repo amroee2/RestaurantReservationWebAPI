@@ -18,16 +18,24 @@ namespace RestaurantReservationCore.UI
         {
             while (true)
             {
+                const int customersWithBigPartySize = 6;
                 Console.WriteLine("1. Add Customer");
                 Console.WriteLine("2. Update Customer");
                 Console.WriteLine("3. Delete Customer");
                 Console.WriteLine("4. View All Customers");
                 Console.WriteLine("5. View Customer By Id");
+                Console.WriteLine("6. Customers With Big Party Size");
                 Console.WriteLine("0. Go Back");
+
+                string input = Console.ReadLine();
+                if (Convert.ToInt32(input) == customersWithBigPartySize)
+                {
+                    CustomersWithBigPartySize();
+                }
 
                 try
                 {
-                    Enum.TryParse(Console.ReadLine(), out OperationOptions option);
+                    Enum.TryParse(input, out OperationOptions option);
                     if (option == OperationOptions.Exit)
                     {
                         return;
@@ -125,6 +133,13 @@ namespace RestaurantReservationCore.UI
             _ = _customerService.AddCustomerAsync(customer);
 
 
+        }
+
+        private void CustomersWithBigPartySize()
+        {
+            Console.WriteLine("Enter Party Size");
+            int partySize = Convert.ToInt32(Console.ReadLine());
+            _customerService.GetCustomersWithBigPartySizeAsync(partySize);
         }
 
     }

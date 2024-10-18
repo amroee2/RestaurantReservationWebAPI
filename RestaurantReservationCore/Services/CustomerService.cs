@@ -6,9 +6,9 @@ namespace RestaurantReservationCore.Services
     public class CustomerService
     {
 
-        private readonly IRepository<Customer> _customerRepository;
+        private readonly ICustomerRepository _customerRepository;
 
-        public CustomerService(IRepository<Customer> customerRepository)
+        public CustomerService(ICustomerRepository customerRepository)
         {
             _customerRepository = customerRepository;
         }
@@ -73,6 +73,20 @@ namespace RestaurantReservationCore.Services
                 return;
             }
             await _customerRepository.DeleteAsync(customer);
+        }
+
+        public async Task GetCustomersWithBigPartySizeAsync(int partySize)
+        {
+            var customers = await _customerRepository.CustomersWithBigPartySize(partySize);
+            if (!customers.Any())
+            {
+                Console.WriteLine("No customers found");
+                return;
+            }
+            foreach (var customer in customers)
+            {
+                Console.WriteLine(customer);
+            }
         }
     }
 }

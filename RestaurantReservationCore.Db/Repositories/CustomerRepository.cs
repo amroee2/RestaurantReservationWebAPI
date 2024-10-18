@@ -3,7 +3,7 @@ using RestaurantReservationCore.Db.DataModels;
 
 namespace RestaurantReservationCore.Db.Repositories
 {
-    public class CustomerRepository : IRepository<Customer>
+    public class CustomerRepository : ICustomerRepository
     {
         private readonly RestaurantReservationDbContext _context;
         public CustomerRepository(RestaurantReservationDbContext context)
@@ -37,6 +37,12 @@ namespace RestaurantReservationCore.Db.Repositories
         {
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Customer>> CustomersWithBigPartySize(int partySize)
+        {
+            var customers = await _context.Customers.FromSqlRaw("CustomersWithBigPartySize {0}", partySize).ToListAsync();
+            return customers;
         }
     }
 }
