@@ -18,16 +18,23 @@ namespace RestaurantReservationCore.UI
         {
             while (true)
             {
+                const int listOrderedMenuItems = 6;
                 Console.WriteLine("1. Add Item");
                 Console.WriteLine("2. Update Item");
                 Console.WriteLine("3. Delete Item");
                 Console.WriteLine("4. View All Items");
                 Console.WriteLine("5. View Item By Id");
+                Console.WriteLine("6. List Ordered Menu Items");
                 Console.WriteLine("0. Go Back");
 
+                string input = Console.ReadLine();
+                if (Convert.ToInt32(input) == 6)
+                {
+                    ListOrderedMenuItems();
+                }
                 try
                 {
-                    Enum.TryParse(Console.ReadLine(), out OperationOptions option);
+                    Enum.TryParse(input, out OperationOptions option);
                     if (option == OperationOptions.Exit)
                     {
                         return;
@@ -122,6 +129,13 @@ namespace RestaurantReservationCore.UI
                 RestaurantId = restaurantId
             };
             _menuItemService.AddMenuItemAsync(item);
+        }
+
+        private void ListOrderedMenuItems()
+        {
+            Console.WriteLine("Enter Reservation Id: ");
+            int reservationId = Convert.ToInt32(Console.ReadLine());
+            _menuItemService.GetMenuItemsByReservationIdAsync(reservationId).Wait();
         }
     }
 }

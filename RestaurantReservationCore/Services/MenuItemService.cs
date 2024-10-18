@@ -6,9 +6,9 @@ namespace RestaurantReservationCore.Services
 {
     public class MenuItemService
     {
-        private readonly IRepository<MenuItem> _menuItemRepository;
+        private readonly IMenuRepository _menuItemRepository;
 
-        public MenuItemService(IRepository<MenuItem> menuItemRepository)
+        public MenuItemService(IMenuRepository menuItemRepository)
         {
             _menuItemRepository = menuItemRepository;
         }
@@ -72,6 +72,20 @@ namespace RestaurantReservationCore.Services
                 return;
             }
             await _menuItemRepository.DeleteAsync(menuItem);
+        }
+
+        public async Task GetMenuItemsByReservationIdAsync(int reservationId)
+        {
+            var menuItems =  await _menuItemRepository.GetMenuItemsByReservationIdAsync(reservationId);
+            if (!menuItems.Any())
+            {
+                Console.WriteLine("No menu items found");
+                return;
+            }
+            foreach (var menuItem in menuItems)
+            {
+                Console.WriteLine(menuItem);
+            }
         }
     }
 }
