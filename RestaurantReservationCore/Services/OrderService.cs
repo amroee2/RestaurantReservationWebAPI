@@ -5,9 +5,9 @@ namespace RestaurantReservationCore.Services
 {
     public class OrderService
     {
-        private readonly IRepository<Order> _orderRepository;
+        private readonly IOrderRepository _orderRepository;
 
-        public OrderService(IRepository<Order> orderRepository)
+        public OrderService(IOrderRepository orderRepository)
         {
             _orderRepository = orderRepository;
         }
@@ -71,6 +71,24 @@ namespace RestaurantReservationCore.Services
                 return;
             }
             await _orderRepository.DeleteAsync(order);
+        }
+
+        public async Task GetOrdersByReservationIdAsync(int reservationId)
+        {
+            List<Order> orders = await _orderRepository.GetOrdersByReservationIdAsync(reservationId);
+            if (!orders.Any())
+            {
+                Console.WriteLine("No orders found");
+                return;
+            }
+            foreach (var order in orders)
+            {
+                Console.WriteLine(order);
+                foreach(var item in order.OrderItems)
+                {
+                    Console.WriteLine(item);
+                }
+            }
         }
     }
 }

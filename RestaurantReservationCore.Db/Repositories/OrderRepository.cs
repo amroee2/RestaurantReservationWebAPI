@@ -3,7 +3,7 @@ using RestaurantReservationCore.Db.DataModels;
 
 namespace RestaurantReservationCore.Db.Repositories
 {
-    public class OrderRepository : IRepository<Order>
+    public class OrderRepository : IOrderRepository
     {
         private readonly RestaurantReservationDbContext _context;
         public OrderRepository(RestaurantReservationDbContext context)
@@ -37,6 +37,11 @@ namespace RestaurantReservationCore.Db.Repositories
         {
             _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Order>> GetOrdersByReservationIdAsync(int reservationId)
+        {
+            return await _context.Orders.Where(r => r.ReservationId == reservationId).Include(o=>o.OrderItems).ThenInclude(o=>o.MenuItem).ToListAsync();
         }
     }
 }
