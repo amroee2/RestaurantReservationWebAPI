@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RestaurantReservationCore.Db.DataModels;
+using RestaurantReservationCore.Db.Views;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
@@ -12,6 +13,7 @@ namespace RestaurantReservationCore.Db
             optionsBuilder.UseSqlServer(
                 @"Server=(localdb)\mssqllocaldb;Database=RestaurantReservationSystem;Integrated Security=True");
         }
+        public DbSet<CustomerReservationsByRestaurant> CustomerReservationsByRestaurants { get; set; }
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -23,6 +25,7 @@ namespace RestaurantReservationCore.Db
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CustomerReservationsByRestaurant>().HasNoKey().ToView("CustomersReservationByRestaurant");
             modelBuilder.Entity<Customer>().HasData(
                 new Customer { CustomerId = 1, FirstName = "John", LastName = "Doe", Email = "john.doe@example.com", PhoneNumber = "123456789" },
                 new Customer { CustomerId = 2, FirstName = "Jane", LastName = "Smith", Email = "jane.smith@example.com", PhoneNumber = "987654321" },

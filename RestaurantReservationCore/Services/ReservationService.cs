@@ -1,5 +1,6 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories;
+using RestaurantReservationCore.Db.Views;
 
 namespace RestaurantReservationCore.Services
 {
@@ -89,6 +90,20 @@ namespace RestaurantReservationCore.Services
                 {
                     Console.WriteLine(reservation);
                 }
+            }
+        }
+
+        public async Task GetCustomerReservationsByRestaurantsAsync()
+        {
+            List<CustomerReservationsByRestaurant> customerReservationsByRestaurants = await _reservationRepository.GetCustomerReservationsByRestaurants();
+            if (!customerReservationsByRestaurants.Any())
+            {
+                Console.WriteLine("No reservations found");
+                return;
+            }
+            foreach (var customerReservationByRestaurant in customerReservationsByRestaurants)
+            {
+                Console.WriteLine(customerReservationByRestaurant);
             }
         }
     }

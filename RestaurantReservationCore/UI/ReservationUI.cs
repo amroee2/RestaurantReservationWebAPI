@@ -19,18 +19,25 @@ namespace RestaurantReservationCore.UI
             while (true)
             {
                 const int getReservationsByCustomerIdOption = 6;
+                const int getCustomerReservationsByRestaurantOption = 7;
                 Console.WriteLine("1. Add Reservation");
                 Console.WriteLine("2. Update Reservation");
                 Console.WriteLine("3. Delete Reservation");
                 Console.WriteLine("4. View All Reservations");
                 Console.WriteLine("5. View Reservation By Id");
                 Console.WriteLine("6. View Reservations By Customer Id");
+                Console.WriteLine("7. View Customer Reservations With Restaurant Name");
                 Console.WriteLine("0. Go Back");
 
                 string input = Console.ReadLine();
                 if (Convert.ToInt32(input) == getReservationsByCustomerIdOption)
                 {
                     GetReservationsByCustomerId();
+                    continue;
+                }
+                else if (Convert.ToInt32(input) == getCustomerReservationsByRestaurantOption)
+                {
+                    GetCustomerReservationsByRestaurant();
                     continue;
                 }
                 try
@@ -143,6 +150,11 @@ namespace RestaurantReservationCore.UI
             Console.WriteLine("Enter Customer Id");
             int customerId = Convert.ToInt32(Console.ReadLine());
             _reservationService.GetAllReservationsByCustomerIdAsync(customerId);
+        }
+
+        private void GetCustomerReservationsByRestaurant()
+        {
+            _reservationService.GetCustomerReservationsByRestaurantsAsync();
         }
     }
 }

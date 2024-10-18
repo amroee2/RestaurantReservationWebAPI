@@ -76,7 +76,7 @@ namespace RestaurantReservationCore.UI
 
         private void DeleteReservation()
         {
-            Console.WriteLine("Enter reservation id:");
+            Console.WriteLine("Enter restaurant id:");
             int id = Convert.ToInt32(Console.ReadLine());
             _restaurantService.DeleteRestaurantAsync(id);
         }
