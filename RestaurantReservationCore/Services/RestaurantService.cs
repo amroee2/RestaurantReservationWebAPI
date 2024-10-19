@@ -74,11 +74,11 @@ namespace RestaurantReservationCore.Services
             await _restaurantRepository.DeleteAsync(restaurant);
         }
 
-        public async Task CalculateRestaurantRevenue(int restaurantId)
+        public async Task CalculateRestaurantRevenueAsync(int restaurantId)
         {
             try
             {
-                var totalRevenue = await _restaurantRepository.CalculateRestaurantRevenue(restaurantId);
+                var totalRevenue = await _restaurantRepository.CalculateRestaurantRevenueAsync(restaurantId);
                 Console.WriteLine($"Total revenue for restaurant {restaurantId}: {totalRevenue}");
             }
             catch (Exception ex)

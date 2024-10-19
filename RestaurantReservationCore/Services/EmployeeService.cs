@@ -89,10 +89,10 @@ namespace RestaurantReservationCore.Services
             }
         }
 
-        public async Task CalculateAverageOrderAmount(int employeeId)
+        public async Task CalculateAverageOrderAmountAsync(int employeeId)
         {
-            double totalAmount = await _employeeRepository.EmployeeTotalAmount(employeeId);
-            int numberOfOrders = await _employeeRepository.NumberOfOrders(employeeId);
+            double totalAmount = await _employeeRepository.GetEmployeeTotalAmountAsync(employeeId);
+            int numberOfOrders = await _employeeRepository.GetEmployeeNumberOfOrdersAsync(employeeId);
             Console.WriteLine(totalAmount/numberOfOrders);
         }
     }

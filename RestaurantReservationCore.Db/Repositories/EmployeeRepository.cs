@@ -44,12 +44,12 @@ namespace RestaurantReservationCore.Db.Repositories
             return await _context.Employees.Where(e => e.Position == "Manager").ToListAsync();
         }
 
-        public async Task<double> EmployeeTotalAmount(int employeeId)
+        public async Task<double> GetEmployeeTotalAmountAsync(int employeeId)
         {
             return await _context.Orders.Where(e => e.EmployeeId == employeeId).SumAsync(o => o.TotalAmount);
         }
 
-        public async Task<int> NumberOfOrders(int employeeId)
+        public async Task<int> GetEmployeeNumberOfOrdersAsync(int employeeId)
         {
             return await _context.Orders.Where(e => e.EmployeeId == employeeId).CountAsync();
         }

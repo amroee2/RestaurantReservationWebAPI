@@ -77,7 +77,7 @@ namespace RestaurantReservationCore.Services
 
         public async Task GetCustomersWithBigPartySizeAsync(int partySize)
         {
-            var customers = await _customerRepository.CustomersWithBigPartySize(partySize);
+            var customers = await _customerRepository.GetCustomersWithBigPartySizeAsync(partySize);
             if (!customers.Any())
             {
                 Console.WriteLine("No customers found");

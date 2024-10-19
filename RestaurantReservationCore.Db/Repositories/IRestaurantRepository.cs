@@ -4,6 +4,6 @@ namespace RestaurantReservationCore.Db.Repositories
 {
     public interface IRestaurantRepository : IRepository<Restaurant>
     {
-        Task<decimal> CalculateRestaurantRevenue(int restaurantId);
+        Task<decimal> CalculateRestaurantRevenueAsync(int restaurantId);
     }
 }

@@ -39,7 +39,7 @@ namespace RestaurantReservationCore.Db.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Customer>> CustomersWithBigPartySize(int partySize)
+        public async Task<List<Customer>> GetCustomersWithBigPartySizeAsync(int partySize)
         {
             var customers = await _context.Customers.FromSqlRaw("CustomersWithBigPartySize {0}", partySize).ToListAsync();
             return customers;

@@ -50,7 +50,7 @@ namespace RestaurantReservationCore.Db.Repositories
 
 
 
-        public async Task<decimal> CalculateRestaurantRevenue(int restaurantId)
+        public async Task<decimal> CalculateRestaurantRevenueAsync(int restaurantId)
         {
             var revenue = await _context.Database
                 .SqlQuery<decimal>($"SELECT dbo.CalculateRestaurantRevenue({restaurantId}) AS Value")

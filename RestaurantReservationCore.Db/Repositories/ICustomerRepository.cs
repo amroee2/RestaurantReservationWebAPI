@@ -4,6 +4,6 @@ namespace RestaurantReservationCore.Db.Repositories
 {
     public interface ICustomerRepository : IRepository<Customer>
     {
-        Task<List<Customer>> CustomersWithBigPartySize(int partySize);
+        Task<List<Customer>> GetCustomersWithBigPartySizeAsync(int partySize);
     }
 }
