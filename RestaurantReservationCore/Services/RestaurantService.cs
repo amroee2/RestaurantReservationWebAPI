@@ -76,15 +76,8 @@ namespace RestaurantReservationCore.Services
 
         public async Task CalculateRestaurantRevenueAsync(int restaurantId)
         {
-            try
-            {
-                var totalRevenue = await _restaurantRepository.CalculateRestaurantRevenueAsync(restaurantId);
-                Console.WriteLine($"Total revenue for restaurant {restaurantId}: {totalRevenue}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            var totalRevenue = await _restaurantRepository.CalculateRestaurantRevenueAsync(restaurantId);
+            Console.WriteLine($"Total revenue for restaurant {restaurantId}: {totalRevenue}");
         }
     }
 }
