@@ -34,7 +34,7 @@ namespace RestaurantReservationCore.Db.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("DROP FUNCTION dbo.CalcualteRestaurantRevenue");
+            migrationBuilder.Sql("DROP FUNCTION dbo.CalculateRestaurantRevenue");
         }
     }
 }

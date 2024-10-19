@@ -6,11 +6,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RestaurantReservationCore.Db.Migrations
 {
     /// <inheritdoc />
-
     public partial class addStoredProcedure : Migration
     {
         /// <inheritdoc />
-
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(@"
