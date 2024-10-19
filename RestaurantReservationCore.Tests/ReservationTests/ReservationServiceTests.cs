@@ -186,5 +186,53 @@ namespace RestaurantReservationCore.Tests.ReservationTests
             // Assert
             _mockReservationRepository.Verify(repo => repo.DeleteAsync(It.IsAny<Reservation>()), Times.Never);
         }
+
+        [Fact]
+        public async Task GetReservationsByCustomerIdAsync_ShouldReturnReservations()
+        {
+            // Arrange
+            var customerId = _fixture.Create<int>();
+            var reservations = _fixture.Build<Reservation>()
+                .With(r => r.CustomerId, customerId)
+                .Without(r => r.Customer)
+                .CreateMany(5)
+                .ToList();
+            _mockReservationRepository.Setup(repo => repo.GetReservationsByCustomerIdAsync(customerId)).ReturnsAsync(reservations);
+
+            // Act
+            var stringWriter = new StringWriter();
+            Console.SetOut(stringWriter);
+            await _reservationService.GetReservationsByCustomerIdAsync(customerId);
+            var output = stringWriter.ToString();
+            Console.SetOut(Console.Out);
+
+            // Assert
+            _mockReservationRepository.Verify(repo => repo.GetReservationsByCustomerIdAsync(customerId), Times.Once);
+            foreach (var reservation in reservations)
+            {
+                Assert.Contains(reservation.ToString(), output);
+            }
+        }
+
+        [Fact]
+        public async Task GetReservationsByCustomerIdAsync_ShouldNotReturnReservations()
+        {
+            // Arrange
+            var customerId = _fixture.Create<int>();
+            var reservations = _fixture.CreateMany<Reservation>(10).ToList();
+            var emptyList = new List<Reservation>();
+            _mockReservationRepository.Setup(repo => repo.GetReservationsByCustomerIdAsync(customerId)).ReturnsAsync(emptyList);
+
+            // Act
+            var stringWriter = new StringWriter();
+            Console.SetOut(stringWriter);
+            await _reservationService.GetReservationsByCustomerIdAsync(customerId);
+            var output = stringWriter.ToString().Trim();
+            Console.SetOut(Console.Out);
+
+            // Assert
+            _mockReservationRepository.Verify(repo => repo.GetReservationsByCustomerIdAsync(customerId), Times.Once);
+            Assert.Equal("No reservations found", output);
+        }
     }
 }

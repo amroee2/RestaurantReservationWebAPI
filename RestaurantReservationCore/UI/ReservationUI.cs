@@ -152,7 +152,7 @@ namespace RestaurantReservationCore.UI
         {
             Console.WriteLine("Enter Customer Id");
             int customerId = Convert.ToInt32(Console.ReadLine());
-            await _reservationService.GetAllReservationsByCustomerIdAsync(customerId);
+            await _reservationService.GetReservationsByCustomerIdAsync(customerId);
         }
 
         private async Task GetCustomerReservationsByRestaurantAsync()

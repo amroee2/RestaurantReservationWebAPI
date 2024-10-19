@@ -76,7 +76,7 @@ namespace RestaurantReservationCore.Services
             await _reservationRepository.DeleteAsync(reservation);
         }
 
-        public async Task GetAllReservationsByCustomerIdAsync(int customerId)
+        public async Task GetReservationsByCustomerIdAsync(int customerId)
         {
             List<Reservation> reservations = await _reservationRepository.GetReservationsByCustomerIdAsync(customerId);
             if (!reservations.Any())

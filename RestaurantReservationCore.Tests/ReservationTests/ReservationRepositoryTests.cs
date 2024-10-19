@@ -108,5 +108,30 @@ namespace RestaurantReservationCore.Tests.ReservationTests
             var result = await _context.Reservations.FirstOrDefaultAsync(r => r.ReservationId == reservation.ReservationId);
             Assert.Null(result);
         }
+
+        [Fact]
+        public async Task GetReservationsByCustomerIdAsync_ShouldReturnReservationsByCustomerId()
+        {
+            // Arrange
+            var customerId = 1;
+            _fixture.Customize<Reservation>(c => c.With(r => r.CustomerId, customerId));
+            var reservations = _fixture.Build<Reservation>()
+                .With(r => r.CustomerId, customerId)
+                .Without(r => r.Customer)
+                .CreateMany(5)
+                .ToList();
+            await _context.Reservations.AddRangeAsync(reservations);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var result = await reservationRepository.GetReservationsByCustomerIdAsync(customerId);
+
+            // Assert
+            Assert.Equal(reservations.Count, result.Count);
+            foreach(var reservation in result)
+            {
+                Assert.Equal(customerId, reservation.CustomerId);
+            }
+        }
     }
 }
