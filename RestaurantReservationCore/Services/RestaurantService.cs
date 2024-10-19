@@ -5,9 +5,9 @@ namespace RestaurantReservationCore.Services
 {
     public class RestaurantService
     {
-        private readonly IRepository<Restaurant> _restaurantRepository;
+        private readonly IRestaurantRepository _restaurantRepository;
 
-        public RestaurantService(IRepository<Restaurant> restaurantRepository)
+        public RestaurantService(IRestaurantRepository restaurantRepository)
         {
             _restaurantRepository = restaurantRepository;
         }
@@ -72,6 +72,19 @@ namespace RestaurantReservationCore.Services
                 return;
             }
             await _restaurantRepository.DeleteAsync(restaurant);
+        }
+
+        public async Task CalculateRestaurantRevenue(int restaurantId)
+        {
+            try
+            {
+                var totalRevenue = await _restaurantRepository.CalculateRestaurantRevenue(restaurantId);
+                Console.WriteLine($"Total revenue for restaurant {restaurantId}: {totalRevenue}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

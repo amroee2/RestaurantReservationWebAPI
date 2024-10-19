@@ -18,15 +18,23 @@ namespace RestaurantReservationCore.UI
         {
             while (true)
             {
+                const int calculateRestaurantRevenue = 6;
                 Console.WriteLine("1. Add Restaurant");
                 Console.WriteLine("2. Update Restaurant");
                 Console.WriteLine("3. Delete Restaurant");
                 Console.WriteLine("4. View All Restaurant");
                 Console.WriteLine("5. View Restaurant By Id");
+                Console.WriteLine("6. Calculate Restaurant Revenue");
                 Console.WriteLine("0. Go Back");
+
+                string input = Console.ReadLine();
+                if (Convert.ToInt32(input) == calculateRestaurantRevenue)
+                {
+                    CalculateRestaurantRevenue();
+                }
                 try
                 {
-                    Enum.TryParse(Console.ReadLine(), out OperationOptions option);
+                    Enum.TryParse(input, out OperationOptions option);
                     if (option == OperationOptions.Exit)
                     {
                         return;
@@ -121,6 +129,13 @@ namespace RestaurantReservationCore.UI
                 OpeningHours = openingHours
             };
             _restaurantService.AddRestaurantAsync(restaurant);
+        }
+
+        private void CalculateRestaurantRevenue()
+        {
+            Console.WriteLine("Enter restaurant id:");
+            int id = Convert.ToInt32(Console.ReadLine());
+            _restaurantService.CalculateRestaurantRevenue(id);
         }
     }
 }

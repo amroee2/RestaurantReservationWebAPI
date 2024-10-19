@@ -3,7 +3,7 @@ using RestaurantReservationCore.Db.DataModels;
 
 namespace RestaurantReservationCore.Db.Repositories
 {
-    public class RestaurantRepository : IRepository<Restaurant>
+    public class RestaurantRepository : IRestaurantRepository
     {
         private readonly RestaurantReservationDbContext _context;
         public RestaurantRepository(RestaurantReservationDbContext context)
@@ -37,6 +37,14 @@ namespace RestaurantReservationCore.Db.Repositories
         {
             _context.Restaurants.Remove(restaurant);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<decimal> CalculateRestaurantRevenue(int restaurantId)
+        {
+            var revenue = await _context.Database
+                .SqlQuery<decimal>($"SELECT dbo.CalculateRestaurantRevenue({restaurantId}) AS Value")
+                .FirstOrDefaultAsync();
+            return revenue;
         }
     }
 }
