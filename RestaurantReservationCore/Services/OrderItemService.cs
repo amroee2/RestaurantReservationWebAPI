@@ -1,6 +1,5 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories;
-using RestaurantReservationCore.UI;
 
 namespace RestaurantReservationCore.Services
 {
@@ -15,8 +14,7 @@ namespace RestaurantReservationCore.Services
 
         public async Task GetAllOrderItemsAsync()
         {
-
-            List<OrderItem> orderItems =  await _orderItemRepository.GetAllAsync();
+            List<OrderItem> orderItems = await _orderItemRepository.GetAllAsync();
             if (!orderItems.Any())
             {
                 Console.WriteLine("No order items found");
@@ -30,7 +28,7 @@ namespace RestaurantReservationCore.Services
 
         public async Task GetOrderItemByIdAsync(int id)
         {
-            OrderItem orderItem =  await _orderItemRepository.GetByIdAsync(id);
+            OrderItem orderItem = await _orderItemRepository.GetByIdAsync(id);
             if (orderItem == null)
             {
                 Console.WriteLine("Order item not found");

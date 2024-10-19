@@ -1,6 +1,5 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories;
-using RestaurantReservationCore.UI;
 
 namespace RestaurantReservationCore.Services
 {
@@ -28,7 +27,7 @@ namespace RestaurantReservationCore.Services
 
         public async Task GetMenuItemByIdAsync(int id)
         {
-            MenuItem menuItem =  await _menuItemRepository.GetByIdAsync(id);
+            MenuItem menuItem = await _menuItemRepository.GetByIdAsync(id);
             if (menuItem == null)
             {
                 Console.WriteLine("Menu item not found");
@@ -76,7 +75,7 @@ namespace RestaurantReservationCore.Services
 
         public async Task GetMenuItemsByReservationIdAsync(int reservationId)
         {
-            var menuItems =  await _menuItemRepository.GetMenuItemsByReservationIdAsync(reservationId);
+            var menuItems = await _menuItemRepository.GetMenuItemsByReservationIdAsync(reservationId);
             if (!menuItems.Any())
             {
                 Console.WriteLine("No menu items found");

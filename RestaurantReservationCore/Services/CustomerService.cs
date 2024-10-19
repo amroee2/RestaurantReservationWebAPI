@@ -5,7 +5,6 @@ namespace RestaurantReservationCore.Services
 {
     public class CustomerService
     {
-
         private readonly ICustomerRepository _customerRepository;
 
         public CustomerService(ICustomerRepository customerRepository)
@@ -15,8 +14,8 @@ namespace RestaurantReservationCore.Services
 
         public async Task GetAllCustomersAsync()
         {
-            List<Customer> customers =  await _customerRepository.GetAllAsync();
-            if(!customers.Any())
+            List<Customer> customers = await _customerRepository.GetAllAsync();
+            if (!customers.Any())
             {
                 Console.WriteLine("No customers found");
                 return;

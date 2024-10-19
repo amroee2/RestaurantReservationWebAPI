@@ -1,6 +1,5 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories;
-using RestaurantReservationCore.UI;
 
 namespace RestaurantReservationCore.Services
 {
@@ -16,7 +15,7 @@ namespace RestaurantReservationCore.Services
         public async Task GetAllEmployeesAsync()
         {
             List<Employee> employees = await _employeeRepository.GetAllAsync();
-            if(!employees.Any())
+            if (!employees.Any())
             {
                 Console.WriteLine("No employees found");
                 return;
@@ -29,7 +28,7 @@ namespace RestaurantReservationCore.Services
 
         public async Task GetEmployeeByIdAsync(int id)
         {
-            Employee employee =  await _employeeRepository.GetByIdAsync(id);
+            Employee employee = await _employeeRepository.GetByIdAsync(id);
             if (employee == null)
             {
                 Console.WriteLine("Employee not found");
@@ -77,7 +76,7 @@ namespace RestaurantReservationCore.Services
 
         public async Task GetAllManagersAsync()
         {
-            List<Employee> employees =  await _employeeRepository.ListAllManagers();
+            List<Employee> employees = await _employeeRepository.ListAllManagers();
             if (!employees.Any())
             {
                 Console.WriteLine("No managers found");
@@ -93,7 +92,7 @@ namespace RestaurantReservationCore.Services
         {
             double totalAmount = await _employeeRepository.GetEmployeeTotalAmountAsync(employeeId);
             int numberOfOrders = await _employeeRepository.GetEmployeeNumberOfOrdersAsync(employeeId);
-            Console.WriteLine(totalAmount/numberOfOrders);
+            Console.WriteLine(totalAmount / numberOfOrders);
         }
     }
 }

@@ -14,20 +14,21 @@ namespace RestaurantReservationCore.Services
 
         public async Task GetAllOrdersAsync()
         {
-            List<Order> orders =  await _orderRepository.GetAllAsync();
+            List<Order> orders = await _orderRepository.GetAllAsync();
             if (!orders.Any())
             {
                 Console.WriteLine("No orders found");
                 return;
             }
-            foreach (var order in orders) {
+            foreach (var order in orders)
+            {
                 Console.WriteLine(order);
             }
         }
 
         public async Task GetOrderByIdAsync(int id)
         {
-            Order order =  await _orderRepository.GetByIdAsync(id);
+            Order order = await _orderRepository.GetByIdAsync(id);
             if (order == null)
             {
                 Console.WriteLine("Order not found");
@@ -84,7 +85,7 @@ namespace RestaurantReservationCore.Services
             foreach (var order in orders)
             {
                 Console.WriteLine(order);
-                foreach(var item in order.OrderItems)
+                foreach (var item in order.OrderItems)
                 {
                     Console.WriteLine(item);
                 }

@@ -15,7 +15,7 @@ namespace RestaurantReservationCore.Services
 
         public async Task GetAllReservationsAsync()
         {
-            List<Reservation> reservations =  await _reservationRepository.GetAllAsync();
+            List<Reservation> reservations = await _reservationRepository.GetAllAsync();
             if (!reservations.Any())
             {
                 Console.WriteLine("No reservations found");
@@ -29,7 +29,7 @@ namespace RestaurantReservationCore.Services
 
         public async Task GetReservationByIdAsync(int id)
         {
-            Reservation reservation =  await _reservationRepository.GetByIdAsync(id);
+            Reservation reservation = await _reservationRepository.GetByIdAsync(id);
             if (reservation == null)
             {
                 Console.WriteLine("Reservation not found");
@@ -49,7 +49,7 @@ namespace RestaurantReservationCore.Services
             await _reservationRepository.AddAsync(reservation);
         }
 
-        public async Task UpdateReservationAsync(int id,Reservation reservation)
+        public async Task UpdateReservationAsync(int id, Reservation reservation)
         {
             var updatedReservation = await _reservationRepository.GetByIdAsync(id);
             if (updatedReservation == null)

@@ -1,6 +1,5 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories;
-using RestaurantReservationCore.UI;
 
 namespace RestaurantReservationCore.Services
 {
