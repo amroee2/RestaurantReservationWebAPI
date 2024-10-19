@@ -40,7 +40,7 @@ namespace RestaurantReservationCore.Db.Repositories.EmployeeManagement
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Employee>> ListAllManagers()
+        public async Task<List<Employee>> ListAllManagersAsync()
         {
             return await _context.Employees.Where(e => e.Position == "Manager").ToListAsync();
         }

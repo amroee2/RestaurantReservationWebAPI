@@ -76,7 +76,7 @@ namespace RestaurantReservationCore.Services
 
         public async Task GetAllManagersAsync()
         {
-            List<Employee> employees = await _employeeRepository.ListAllManagers();
+            List<Employee> employees = await _employeeRepository.ListAllManagersAsync();
             if (!employees.Any())
             {
                 Console.WriteLine("No managers found");

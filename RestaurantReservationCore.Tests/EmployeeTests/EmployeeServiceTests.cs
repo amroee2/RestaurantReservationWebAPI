@@ -189,5 +189,47 @@ namespace RestaurantReservationCore.Tests.EmployeeTests
             // Assert
             _employeeRepositoryMock.Verify(repo => repo.DeleteAsync(It.IsAny<Employee>()), Times.Never);
         }
+
+        [Fact]
+        public async Task GetAllManagersAsync_ShouldReturnAllManagers()
+        {
+            // Arrange
+            var managers = _fixture.CreateMany<Employee>().ToList();
+            _employeeRepositoryMock.Setup(repo => repo.ListAllManagersAsync()).ReturnsAsync(managers);
+
+            // Act
+            var stringWriter = new StringWriter();
+            Console.SetOut(stringWriter);
+            await _employeeService.GetAllManagersAsync();
+            var output = stringWriter.ToString();
+            Console.SetOut(Console.Out);
+
+            // Assert
+            _employeeRepositoryMock.Verify(repo => repo.ListAllManagersAsync(), Times.Once);
+            foreach (var manager in managers)
+            {
+                Assert.Contains(manager.ToString(), output);
+            }
+        }
+
+        [Fact]
+        public async Task GetAllManagersAsync_ShouldNotReturnAllManagers()
+        {
+            // Arrange
+            var managers = _fixture.CreateMany<Employee>().ToList();
+            var emptyList = new List<Employee>();
+            _employeeRepositoryMock.Setup(repo => repo.ListAllManagersAsync()).ReturnsAsync(emptyList);
+
+            // Act
+            var stringWriter = new StringWriter();
+            Console.SetOut(stringWriter);
+            await _employeeService.GetAllManagersAsync();
+            var output = stringWriter.ToString();
+            Console.SetOut(Console.Out);
+
+            // Assert
+            _employeeRepositoryMock.Verify(repo => repo.ListAllManagersAsync(), Times.Once);
+            Assert.Contains("No managers found", output);
+        }
     }
 }

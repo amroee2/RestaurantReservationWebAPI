@@ -108,5 +108,24 @@ namespace RestaurantReservationCore.Tests.EmployeeTests
             var result = await _context.Employees.FirstOrDefaultAsync(e => e.EmployeeId == employee.EmployeeId);
             Assert.Null(result);
         }
+
+        [Fact]
+        public async Task ListAllManagersAsync_ShouldReturnAllManagers()
+        {
+            // Arrange
+            var managers = _fixture.Build<Employee>()
+                .With(e => e.Position, "Manager")
+                .CreateMany(5)
+                .ToList();
+            await _context.Employees.AddRangeAsync(managers);
+            await _context.SaveChangesAsync();
+
+            //Act
+            var result = await _employeeRepository.ListAllManagersAsync();
+
+            //Assert
+            Assert.Equal(managers.Count, result.Count);
+            Assert.True(result.All(m => m.Position == "Manager"));
+        }
     }
 }
