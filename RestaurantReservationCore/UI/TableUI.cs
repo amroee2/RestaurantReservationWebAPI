@@ -6,7 +6,6 @@ namespace RestaurantReservationCore.UI
 {
     public class TableUI
     {
-
         private readonly TableService _tableService;
 
         public TableUI(TableService tableService)
@@ -47,15 +46,19 @@ namespace RestaurantReservationCore.UI
                 case OperationOptions.Add:
                     await AddTableAsync();
                     break;
+
                 case OperationOptions.Update:
                     await UpdateTableAsync();
                     break;
+
                 case OperationOptions.Delete:
                     await DeleteTableAsync();
                     break;
+
                 case OperationOptions.View:
                     await ViewAllTablesAsync();
                     break;
+
                 case OperationOptions.Search:
                     await ViewTableByIdAsync();
                     break;

@@ -1,5 +1,4 @@
-﻿
-using RestaurantReservationCore.Db.DataModels;
+﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Enums;
 using RestaurantReservationCore.Services;
 
@@ -55,15 +54,19 @@ namespace RestaurantReservationCore.UI
                 case OperationOptions.Add:
                     await AddReservationAsync();
                     break;
+
                 case OperationOptions.Update:
                     await UpdateReservationAsync();
                     break;
+
                 case OperationOptions.Delete:
                     await DeleteReservationAsync();
                     break;
+
                 case OperationOptions.View:
                     await ViewAllReservationsAsync();
                     break;
+
                 case OperationOptions.Search:
                     await ViewReservationByIdAsync();
                     break;

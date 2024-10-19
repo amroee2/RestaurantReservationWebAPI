@@ -78,6 +78,7 @@ namespace RestaurantReservationCore.UI
                 }
             }
         }
+
         public async Task HandleRequestAsync(OperationOptions option)
         {
             switch (option)
@@ -85,15 +86,19 @@ namespace RestaurantReservationCore.UI
                 case OperationOptions.Add:
                     await AddEmployeeAsync();
                     break;
+
                 case OperationOptions.Update:
                     await UpdateEmployeeAsync();
                     break;
+
                 case OperationOptions.Delete:
                     await DeleteEmployeeAsync();
                     break;
+
                 case OperationOptions.View:
                     await ViewAllEmployeesAsync();
                     break;
+
                 case OperationOptions.Search:
                     await ViewEmployeeByIdAsync();
                     break;

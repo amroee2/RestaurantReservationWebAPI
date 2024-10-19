@@ -27,7 +27,7 @@ namespace RestaurantReservationCore.UI
                 Console.WriteLine("0. Go Back");
 
                 string input = Console.ReadLine();
-                if(Convert.ToInt32(input) == listOrderAndMenuItemsOption)
+                if (Convert.ToInt32(input) == listOrderAndMenuItemsOption)
                 {
                     await ListOrderAndMenuItemsAsync();
                     continue;
@@ -55,15 +55,19 @@ namespace RestaurantReservationCore.UI
                 case OperationOptions.Add:
                     await AddItemAsync();
                     break;
+
                 case OperationOptions.Update:
                     await UpdateItemAsync();
                     break;
+
                 case OperationOptions.Delete:
                     await DeleteItemAsync();
                     break;
+
                 case OperationOptions.View:
                     await ViewAllItemsAsync();
                     break;
+
                 case OperationOptions.Search:
                     await ViewItemByIdAsync();
                     break;

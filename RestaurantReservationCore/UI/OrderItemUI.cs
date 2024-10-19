@@ -6,7 +6,6 @@ namespace RestaurantReservationCore.UI
 {
     public class OrderItemUI
     {
-
         private readonly OrderItemService _orderItemService;
 
         public OrderItemUI(OrderItemService orderItemService)
@@ -48,15 +47,19 @@ namespace RestaurantReservationCore.UI
                 case OperationOptions.Add:
                     await AddItemAsync();
                     break;
+
                 case OperationOptions.Update:
                     await UpdateItemAsync();
                     break;
+
                 case OperationOptions.Delete:
                     await DeleteItemAsync();
                     break;
+
                 case OperationOptions.View:
                     await ViewAllItemsAsync();
                     break;
+
                 case OperationOptions.Search:
                     await ViewItemByIdAsync();
                     break;

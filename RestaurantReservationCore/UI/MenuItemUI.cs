@@ -1,13 +1,11 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Enums;
 using RestaurantReservationCore.Services;
-using System.Runtime.CompilerServices;
 
 namespace RestaurantReservationCore.UI
 {
     public class MenuItemUI
     {
-
         private readonly MenuItemService _menuItemService;
 
         public MenuItemUI(MenuItemService menuItemService)
@@ -56,15 +54,19 @@ namespace RestaurantReservationCore.UI
                 case OperationOptions.Add:
                     await AddItemAsync();
                     break;
+
                 case OperationOptions.Update:
                     await UpdateItemAsync();
                     break;
+
                 case OperationOptions.Delete:
                     await DeleteItemAsync();
                     break;
+
                 case OperationOptions.View:
                     await ViewAllItemsAsync();
                     break;
+
                 case OperationOptions.Search:
                     await ViewItemByIdAsync();
                     break;

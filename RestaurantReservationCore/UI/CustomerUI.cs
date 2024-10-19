@@ -1,13 +1,11 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Enums;
 using RestaurantReservationCore.Services;
-using System.Runtime.CompilerServices;
 
 namespace RestaurantReservationCore.UI
 {
     public class CustomerUI
     {
-
         private readonly CustomerService _customerService;
 
         public CustomerUI(CustomerService customerService)
@@ -57,15 +55,19 @@ namespace RestaurantReservationCore.UI
                 case OperationOptions.Add:
                     await AddCustomerAsync();
                     break;
+
                 case OperationOptions.Update:
                     await UpdateCustomerAsync();
                     break;
+
                 case OperationOptions.Delete:
                     await DeleteCustomerAsync();
                     break;
+
                 case OperationOptions.View:
                     await ViewAllCustomersAsync();
                     break;
+
                 case OperationOptions.Search:
                     await ViewCustomerByIdAsync();
                     break;
@@ -132,8 +134,6 @@ namespace RestaurantReservationCore.UI
                 PhoneNumber = phoneNumber
             };
             await _customerService.AddCustomerAsync(customer);
-
-
         }
 
         private async Task GetCustomersWithBigPartySizeAsync()
@@ -142,6 +142,5 @@ namespace RestaurantReservationCore.UI
             int partySize = Convert.ToInt32(Console.ReadLine());
             await _customerService.GetCustomersWithBigPartySizeAsync(partySize);
         }
-
     }
 }
