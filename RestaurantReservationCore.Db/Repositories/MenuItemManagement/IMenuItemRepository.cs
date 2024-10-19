@@ -1,8 +1,8 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 
-namespace RestaurantReservationCore.Db.Repositories
+namespace RestaurantReservationCore.Db.Repositories.MenuItemManagement
 {
-    public interface IMenuRepository : IRepository<MenuItem>
+    public interface IMenuItemRepository : IRepository<MenuItem>
     {
         Task<List<MenuItem>> GetMenuItemsByReservationIdAsync(int reservationId);
     }

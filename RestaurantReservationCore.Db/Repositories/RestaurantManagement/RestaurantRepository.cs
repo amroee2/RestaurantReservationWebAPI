@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RestaurantReservationCore.Db.DataModels;
 
-namespace RestaurantReservationCore.Db.Repositories
+namespace RestaurantReservationCore.Db.Repositories.RestaurantManagement
 {
     public class RestaurantRepository : IRestaurantRepository
     {

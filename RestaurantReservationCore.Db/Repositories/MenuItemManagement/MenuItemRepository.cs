@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RestaurantReservationCore.Db.DataModels;
 
-namespace RestaurantReservationCore.Db.Repositories
+namespace RestaurantReservationCore.Db.Repositories.MenuItemManagement
 {
-    public class MenuItemRepository : IMenuRepository
+    public class MenuItemRepository : IMenuItemRepository
     {
         private readonly RestaurantReservationDbContext _context;
 

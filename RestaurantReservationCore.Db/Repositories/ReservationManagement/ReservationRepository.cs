@@ -2,7 +2,7 @@
 using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Views;
 
-namespace RestaurantReservationCore.Db.Repositories
+namespace RestaurantReservationCore.Db.Repositories.ReservationManagement
 {
     public class ReservationRepository : IReservationRepository
     {

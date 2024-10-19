@@ -1,5 +1,5 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
-using RestaurantReservationCore.Db.Repositories;
+using RestaurantReservationCore.Db.Repositories.ReservationManagement;
 using RestaurantReservationCore.Db.Views;
 
 namespace RestaurantReservationCore.Services

@@ -1,6 +1,6 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 
-namespace RestaurantReservationCore.Db.Repositories
+namespace RestaurantReservationCore.Db.Repositories.OrderManagement
 {
     public interface IOrderRepository : IRepository<Order>
     {
