@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Views;
-using System.Collections.Generic;
-using System.Reflection.Emit;
 
 namespace RestaurantReservationCore.Db
 {
@@ -13,6 +11,7 @@ namespace RestaurantReservationCore.Db
             optionsBuilder.UseSqlServer(
                 @"Server=(localdb)\mssqllocaldb;Database=RestaurantReservationSystem;Integrated Security=True");
         }
+
         public DbSet<CustomerReservationsByRestaurant> CustomerReservationsByRestaurants { get; set; }
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
