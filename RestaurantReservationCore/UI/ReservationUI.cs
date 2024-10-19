@@ -2,6 +2,7 @@
 using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Enums;
 using RestaurantReservationCore.Services;
+using System.Runtime.CompilerServices;
 
 namespace RestaurantReservationCore.UI
 {
@@ -14,7 +15,7 @@ namespace RestaurantReservationCore.UI
             _reservationService = reservationRepository;
         }
 
-        public void DisplayOptions()
+        public async Task DisplayOptionsAsync()
         {
             while (true)
             {
@@ -32,12 +33,12 @@ namespace RestaurantReservationCore.UI
                 string input = Console.ReadLine();
                 if (Convert.ToInt32(input) == getReservationsByCustomerIdOption)
                 {
-                    GetReservationsByCustomerId();
+                    await GetReservationsByCustomerIdAsync();
                     continue;
                 }
                 else if (Convert.ToInt32(input) == getCustomerReservationsByRestaurantOption)
                 {
-                    GetCustomerReservationsByRestaurant();
+                    await GetCustomerReservationsByRestaurantAsync();
                     continue;
                 }
                 try
@@ -47,7 +48,7 @@ namespace RestaurantReservationCore.UI
                     {
                         return;
                     }
-                    HandleRequest(option);
+                    await HandleRequestAsync(option);
                 }
                 catch (Exception ex)
                 {
@@ -56,48 +57,48 @@ namespace RestaurantReservationCore.UI
             }
         }
 
-        public void HandleRequest(OperationOptions option)
+        public async Task HandleRequestAsync(OperationOptions option)
         {
             switch (option)
             {
                 case OperationOptions.Add:
-                    AddReservation();
+                    await AddReservationAsync();
                     break;
                 case OperationOptions.Update:
-                    UpdateReservation();
+                    await UpdateReservationAsync();
                     break;
                 case OperationOptions.Delete:
-                    DeleteReservation();
+                    await DeleteReservationAsync();
                     break;
                 case OperationOptions.View:
-                    ViewAllReservations();
+                    await ViewAllReservationsAsync();
                     break;
                 case OperationOptions.Search:
-                    ViewReservationById();
+                    await ViewReservationByIdAsync();
                     break;
             }
         }
 
-        private void ViewReservationById()
+        private async Task ViewReservationByIdAsync()
         {
             Console.WriteLine("Enter reservation id:");
             int id = Convert.ToInt32(Console.ReadLine());
-            _reservationService.GetReservationByIdAsync(id);
+            await _reservationService.GetReservationByIdAsync(id);
         }
 
-        private void ViewAllReservations()
+        private async Task ViewAllReservationsAsync()
         {
-            _reservationService.GetAllReservationsAsync();
+            await _reservationService.GetAllReservationsAsync();
         }
 
-        private void DeleteReservation()
+        private async Task DeleteReservationAsync()
         {
             Console.WriteLine("Enter reservation id:");
             int id = Convert.ToInt32(Console.ReadLine());
-            _reservationService.DeleteReservationAsync(id);
+            await _reservationService.DeleteReservationAsync(id);
         }
 
-        private void UpdateReservation()
+        private async Task UpdateReservationAsync()
         {
             Console.WriteLine("Enter reservation id:");
             int id = Convert.ToInt32(Console.ReadLine());
@@ -119,10 +120,10 @@ namespace RestaurantReservationCore.UI
                 TableId = tableId,
                 RestaurantId = restaurantId
             };
-            _reservationService.UpdateReservationAsync(id, reservation);
+            await _reservationService.UpdateReservationAsync(id, reservation);
         }
 
-        private void AddReservation()
+        private async Task AddReservationAsync()
         {
             Console.WriteLine("Enter reservation date");
             DateTime reservationDate = Convert.ToDateTime(Console.ReadLine());
@@ -142,19 +143,19 @@ namespace RestaurantReservationCore.UI
                 TableId = tableId,
                 RestaurantId = restaurantId
             };
-            _reservationService.AddReservationAsync(reservation);
+            await _reservationService.AddReservationAsync(reservation);
         }
 
-        private void GetReservationsByCustomerId()
+        private async Task GetReservationsByCustomerIdAsync()
         {
             Console.WriteLine("Enter Customer Id");
             int customerId = Convert.ToInt32(Console.ReadLine());
-            _reservationService.GetAllReservationsByCustomerIdAsync(customerId);
+            await _reservationService.GetAllReservationsByCustomerIdAsync(customerId);
         }
 
-        private void GetCustomerReservationsByRestaurant()
+        private async Task GetCustomerReservationsByRestaurantAsync()
         {
-            _reservationService.GetCustomerReservationsByRestaurantsAsync();
+            await _reservationService.GetCustomerReservationsByRestaurantsAsync();
         }
     }
 }

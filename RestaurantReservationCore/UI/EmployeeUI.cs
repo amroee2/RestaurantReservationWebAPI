@@ -13,7 +13,7 @@ namespace RestaurantReservationCore.UI
             _employeeService = employeeService;
         }
 
-        public void DisplayOptions()
+        public async Task DisplayOptionsAsync()
         {
             while (true)
             {
@@ -28,7 +28,7 @@ namespace RestaurantReservationCore.UI
                 string input = Console.ReadLine();
                 try
                 {
-                    ProcessInput(input);
+                    await ProcessInputAsync(input);
                 }
                 catch (Exception ex)
                 {
@@ -37,17 +37,17 @@ namespace RestaurantReservationCore.UI
             }
         }
 
-        public void ProcessInput(string input)
+        public async Task ProcessInputAsync(string input)
         {
-            if (TryHandleOperation(input))
+            if (await TryHandleOperationAsync(input))
             {
                 return;
             }
 
-            TryHandleEmployeeOption(input);
+            await TryHandleEmployeeOptionAsync(input);
         }
 
-        private bool TryHandleOperation(string input)
+        private async Task<bool> TryHandleOperationAsync(string input)
         {
             if (Enum.TryParse(input, out OperationOptions option) && Enum.IsDefined(typeof(OperationOptions), option))
             {
@@ -56,51 +56,51 @@ namespace RestaurantReservationCore.UI
                     return true;
                 }
 
-                HandleRequest(option);
+                await HandleRequestAsync(option);
                 return true;
             }
             return false;
         }
 
-        private void TryHandleEmployeeOption(string input)
+        private async Task TryHandleEmployeeOptionAsync(string input)
         {
             if (Enum.TryParse(input, out EmployeeOptions employeeOption) && Enum.IsDefined(typeof(EmployeeOptions), employeeOption))
             {
                 switch (employeeOption)
                 {
                     case EmployeeOptions.ViewAllManagers:
-                        ListAllManagers();
+                        await ListAllManagersAsync();
                         break;
 
                     case EmployeeOptions.ViewEmployeeAverageAmount:
-                        EmployeeAverageAmount();
+                        await EmployeeAverageAmountAsync();
                         break;
                 }
             }
         }
-        public void HandleRequest(OperationOptions option)
+        public async Task HandleRequestAsync(OperationOptions option)
         {
             switch (option)
             {
                 case OperationOptions.Add:
-                    AddEmployee();
+                    await AddEmployeeAsync();
                     break;
                 case OperationOptions.Update:
-                    UpdateEmployee();
+                    await UpdateEmployeeAsync();
                     break;
                 case OperationOptions.Delete:
-                    DeleteEmployee();
+                    await DeleteEmployeeAsync();
                     break;
                 case OperationOptions.View:
-                    ViewAllEmployees();
+                    await ViewAllEmployeesAsync();
                     break;
                 case OperationOptions.Search:
-                    ViewEmployeeById();
+                    await ViewEmployeeByIdAsync();
                     break;
             }
         }
 
-        private void AddEmployee()
+        private async Task AddEmployeeAsync()
         {
             Console.WriteLine("Enter First Name");
             string firstName = Console.ReadLine();
@@ -117,10 +117,10 @@ namespace RestaurantReservationCore.UI
                 Position = position,
                 RestaurantId = restaurantId
             };
-            _employeeService.AddEmployeeAsync(employee);
+            await _employeeService.AddEmployeeAsync(employee);
         }
 
-        private void UpdateEmployee()
+        private async Task UpdateEmployeeAsync()
         {
             Console.WriteLine("Enter employee id: ");
             int id = int.Parse(Console.ReadLine());
@@ -139,38 +139,38 @@ namespace RestaurantReservationCore.UI
                 Position = position,
                 RestaurantId = restaurantId
             };
-            _employeeService.UpdateEmployeeAsync(id, employee);
+            await _employeeService.UpdateEmployeeAsync(id, employee);
         }
 
-        private void ViewEmployeeById()
+        private async Task ViewEmployeeByIdAsync()
         {
             Console.WriteLine("Enter employee id: ");
             int id = int.Parse(Console.ReadLine());
-            _employeeService.GetEmployeeByIdAsync(id);
+            await _employeeService.GetEmployeeByIdAsync(id);
         }
 
-        private void ViewAllEmployees()
+        private async Task ViewAllEmployeesAsync()
         {
-            _employeeService.GetAllEmployeesAsync();
+            await _employeeService.GetAllEmployeesAsync();
         }
 
-        private void DeleteEmployee()
-        {
-            Console.WriteLine("Enter employee id: ");
-            int id = int.Parse(Console.ReadLine());
-            _employeeService.DeleteEmployeeAsync(id);
-        }
-
-        private void ListAllManagers()
-        {
-            _employeeService.GetAllManagersAsync();
-        }
-
-        private void EmployeeAverageAmount()
+        private async Task DeleteEmployeeAsync()
         {
             Console.WriteLine("Enter employee id: ");
             int id = int.Parse(Console.ReadLine());
-            _employeeService.CalculateAverageOrderAmount(id);
+            await _employeeService.DeleteEmployeeAsync(id);
+        }
+
+        private async Task ListAllManagersAsync()
+        {
+            await _employeeService.GetAllManagersAsync();
+        }
+
+        private async Task EmployeeAverageAmountAsync()
+        {
+            Console.WriteLine("Enter employee id: ");
+            int id = int.Parse(Console.ReadLine());
+            await _employeeService.CalculateAverageOrderAmountAsync(id);
         }
     }
 }

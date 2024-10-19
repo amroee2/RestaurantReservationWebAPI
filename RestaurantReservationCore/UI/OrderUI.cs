@@ -13,7 +13,7 @@ namespace RestaurantReservationCore.UI
             _orderService = orderService;
         }
 
-        public void DisplayOptions()
+        public async Task DisplayOptionsAsync()
         {
             while (true)
             {
@@ -29,7 +29,7 @@ namespace RestaurantReservationCore.UI
                 string input = Console.ReadLine();
                 if(Convert.ToInt32(input) == listOrderAndMenuItemsOption)
                 {
-                    ListOrderAndMenuItems();
+                    await ListOrderAndMenuItemsAsync();
                     continue;
                 }
                 try
@@ -39,7 +39,7 @@ namespace RestaurantReservationCore.UI
                     {
                         return;
                     }
-                    HandleRequest(option);
+                    await HandleRequestAsync(option);
                 }
                 catch (Exception ex)
                 {
@@ -48,48 +48,48 @@ namespace RestaurantReservationCore.UI
             }
         }
 
-        public void HandleRequest(OperationOptions option)
+        public async Task HandleRequestAsync(OperationOptions option)
         {
             switch (option)
             {
                 case OperationOptions.Add:
-                    AddItem();
+                    await AddItemAsync();
                     break;
                 case OperationOptions.Update:
-                    UpdateItem();
+                    await UpdateItemAsync();
                     break;
                 case OperationOptions.Delete:
-                    DeleteItem();
+                    await DeleteItemAsync();
                     break;
                 case OperationOptions.View:
-                    ViewAllItems();
+                    await ViewAllItemsAsync();
                     break;
                 case OperationOptions.Search:
-                    ViewItemById();
+                    await ViewItemByIdAsync();
                     break;
             }
         }
 
-        private void ViewItemById()
+        private async Task ViewItemByIdAsync()
         {
             Console.WriteLine("Enter Menu Item id: ");
             int id = Convert.ToInt32(Console.ReadLine());
-            _orderService.GetOrderByIdAsync(id).Wait();
+            await _orderService.GetOrderByIdAsync(id);
         }
 
-        private void ViewAllItems()
+        private async Task ViewAllItemsAsync()
         {
-            _orderService.GetAllOrdersAsync();
+            await _orderService.GetAllOrdersAsync();
         }
 
-        private void DeleteItem()
+        private async Task DeleteItemAsync()
         {
             Console.WriteLine("Enter Menu Item id: ");
             int id = Convert.ToInt32(Console.ReadLine());
-            _orderService.DeleteOrderAsync(id).Wait();
+            await _orderService.DeleteOrderAsync(id);
         }
 
-        private void UpdateItem()
+        private async Task UpdateItemAsync()
         {
             Console.WriteLine("Enter Order Id");
             int id = Convert.ToInt32(Console.ReadLine());
@@ -109,10 +109,10 @@ namespace RestaurantReservationCore.UI
                 EmployeeId = employeeId,
                 ReservationId = reservationId
             };
-            _orderService.UpdateOrderAsync(id, order);
+            await _orderService.UpdateOrderAsync(id, order);
         }
 
-        private void AddItem()
+        private async Task AddItemAsync()
         {
             Console.WriteLine("Enter Order Date");
             DateTime orderDate = Convert.ToDateTime(Console.ReadLine());
@@ -129,14 +129,14 @@ namespace RestaurantReservationCore.UI
                 EmployeeId = employeeId,
                 ReservationId = reservationId
             };
-            _orderService.AddOrderAsync(order);
+            await _orderService.AddOrderAsync(order);
         }
 
-        private void ListOrderAndMenuItems()
+        private async Task ListOrderAndMenuItemsAsync()
         {
             Console.WriteLine("Enter Reservation Id");
             int id = Convert.ToInt32(Console.ReadLine());
-            _orderService.GetOrdersByReservationIdAsync(id);
+            await _orderService.GetOrdersByReservationIdAsync(id);
         }
     }
 }

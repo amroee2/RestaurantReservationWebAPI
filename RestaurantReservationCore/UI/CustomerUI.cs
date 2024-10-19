@@ -1,6 +1,7 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Enums;
 using RestaurantReservationCore.Services;
+using System.Runtime.CompilerServices;
 
 namespace RestaurantReservationCore.UI
 {
@@ -14,7 +15,7 @@ namespace RestaurantReservationCore.UI
             _customerService = customerService;
         }
 
-        public void DisplayOptions()
+        public async Task DisplayOptionsAsync()
         {
             while (true)
             {
@@ -30,7 +31,7 @@ namespace RestaurantReservationCore.UI
                 string input = Console.ReadLine();
                 if (Convert.ToInt32(input) == customersWithBigPartySize)
                 {
-                    CustomersWithBigPartySize();
+                    await GetCustomersWithBigPartySizeAsync();
                 }
 
                 try
@@ -40,7 +41,7 @@ namespace RestaurantReservationCore.UI
                     {
                         return;
                     }
-                    HandleRequest(option);
+                    await HandleRequestAsync(option);
                 }
                 catch (Exception ex)
                 {
@@ -49,48 +50,48 @@ namespace RestaurantReservationCore.UI
             }
         }
 
-        public void HandleRequest(OperationOptions option)
+        public async Task HandleRequestAsync(OperationOptions option)
         {
             switch (option)
             {
                 case OperationOptions.Add:
-                    AddCustomer();
+                    await AddCustomerAsync();
                     break;
                 case OperationOptions.Update:
-                    UpdateCustomer();
+                    await UpdateCustomerAsync();
                     break;
                 case OperationOptions.Delete:
-                    DeleteCustomer();
+                    await DeleteCustomerAsync();
                     break;
                 case OperationOptions.View:
-                    ViewAllCustomers();
+                    await ViewAllCustomersAsync();
                     break;
                 case OperationOptions.Search:
-                    ViewCustomerById();
+                    await ViewCustomerByIdAsync();
                     break;
             }
         }
 
-        private void ViewCustomerById()
+        private async Task ViewCustomerByIdAsync()
         {
             Console.WriteLine("Enter customer id: ");
             int id = Convert.ToInt32(Console.ReadLine());
-            _customerService.GetCustomerByIdAsync(id).Wait();
+            await _customerService.GetCustomerByIdAsync(id);
         }
 
-        private void ViewAllCustomers()
+        private async Task ViewAllCustomersAsync()
         {
-            _customerService.GetAllCustomersAsync().Wait();
+            await _customerService.GetAllCustomersAsync();
         }
 
-        private void DeleteCustomer()
+        private async Task DeleteCustomerAsync()
         {
             Console.WriteLine("Enter customer id: ");
             int id = Convert.ToInt32(Console.ReadLine());
-            _customerService.DeleteCustomerAsync(id).Wait();
+            await _customerService.DeleteCustomerAsync(id);
         }
 
-        private void UpdateCustomer()
+        private async Task UpdateCustomerAsync()
         {
             Console.WriteLine("Enter customer id: ");
             int id = Convert.ToInt32(Console.ReadLine());
@@ -109,10 +110,10 @@ namespace RestaurantReservationCore.UI
                 Email = email,
                 PhoneNumber = phoneNumber
             };
-            _ = _customerService.UpdateCustomerAsync(id, customer);
+            await _customerService.UpdateCustomerAsync(id, customer);
         }
 
-        private void AddCustomer()
+        private async Task AddCustomerAsync()
         {
             Console.WriteLine("Enter customer information\n");
             Console.WriteLine("Enter customer first name: ");
@@ -130,16 +131,16 @@ namespace RestaurantReservationCore.UI
                 Email = email,
                 PhoneNumber = phoneNumber
             };
-            _ = _customerService.AddCustomerAsync(customer);
+            await _customerService.AddCustomerAsync(customer);
 
 
         }
 
-        private void CustomersWithBigPartySize()
+        private async Task GetCustomersWithBigPartySizeAsync()
         {
             Console.WriteLine("Enter Party Size");
             int partySize = Convert.ToInt32(Console.ReadLine());
-            _customerService.GetCustomersWithBigPartySizeAsync(partySize);
+            await _customerService.GetCustomersWithBigPartySizeAsync(partySize);
         }
 
     }

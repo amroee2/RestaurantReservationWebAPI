@@ -1,6 +1,7 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Enums;
 using RestaurantReservationCore.Services;
+using System.Runtime.CompilerServices;
 
 namespace RestaurantReservationCore.UI
 {
@@ -14,7 +15,7 @@ namespace RestaurantReservationCore.UI
             _menuItemService = menuItemService;
         }
 
-        public void DisplayOptions()
+        public async Task DisplayOptionsAsync()
         {
             while (true)
             {
@@ -28,9 +29,9 @@ namespace RestaurantReservationCore.UI
                 Console.WriteLine("0. Go Back");
 
                 string input = Console.ReadLine();
-                if (Convert.ToInt32(input) == 6)
+                if (Convert.ToInt32(input) == listOrderedMenuItems)
                 {
-                    ListOrderedMenuItems();
+                    await ListOrderedMenuItemsAsync();
                 }
                 try
                 {
@@ -39,7 +40,7 @@ namespace RestaurantReservationCore.UI
                     {
                         return;
                     }
-                    HandleRequest(option);
+                    await HandleRequestAsync(option);
                 }
                 catch (Exception ex)
                 {
@@ -48,48 +49,48 @@ namespace RestaurantReservationCore.UI
             }
         }
 
-        public void HandleRequest(OperationOptions option)
+        public async Task HandleRequestAsync(OperationOptions option)
         {
             switch (option)
             {
                 case OperationOptions.Add:
-                    AddItem();
+                    await AddItemAsync();
                     break;
                 case OperationOptions.Update:
-                    UpdateItem();
+                    await UpdateItemAsync();
                     break;
                 case OperationOptions.Delete:
-                    DeleteItem();
+                    await DeleteItemAsync();
                     break;
                 case OperationOptions.View:
-                    ViewAllItems();
+                    await ViewAllItemsAsync();
                     break;
                 case OperationOptions.Search:
-                    ViewItemById();
+                    await ViewItemByIdAsync();
                     break;
             }
         }
 
-        private void ViewItemById()
+        private async Task ViewItemByIdAsync()
         {
             Console.WriteLine("Enter Menu Item id: ");
             int id = Convert.ToInt32(Console.ReadLine());
-            _menuItemService.GetMenuItemByIdAsync(id).Wait();
+            await _menuItemService.GetMenuItemByIdAsync(id);
         }
 
-        private void ViewAllItems()
+        private async Task ViewAllItemsAsync()
         {
-            _menuItemService.GetAllMenuItemsAsync();
+            await _menuItemService.GetAllMenuItemsAsync();
         }
 
-        private void DeleteItem()
+        private async Task DeleteItemAsync()
         {
             Console.WriteLine("Enter Menu Item id: ");
             int id = Convert.ToInt32(Console.ReadLine());
-            _menuItemService.DeleteMenuItemAsync(id).Wait();
+            await _menuItemService.DeleteMenuItemAsync(id);
         }
 
-        private void UpdateItem()
+        private async Task UpdateItemAsync()
         {
             Console.WriteLine("Enter Menu Item id: ");
             int id = Convert.ToInt32(Console.ReadLine());
@@ -108,10 +109,10 @@ namespace RestaurantReservationCore.UI
                 Price = price,
                 RestaurantId = restaurantId
             };
-            _ = _menuItemService.UpdateMenuItemAsync(id, item);
+            await _menuItemService.UpdateMenuItemAsync(id, item);
         }
 
-        private void AddItem()
+        private async Task AddItemAsync()
         {
             Console.WriteLine("Enter Menu Item name: ");
             string name = Console.ReadLine();
@@ -128,14 +129,14 @@ namespace RestaurantReservationCore.UI
                 Price = price,
                 RestaurantId = restaurantId
             };
-            _menuItemService.AddMenuItemAsync(item);
+            await _menuItemService.AddMenuItemAsync(item);
         }
 
-        private void ListOrderedMenuItems()
+        private async Task ListOrderedMenuItemsAsync()
         {
             Console.WriteLine("Enter Reservation Id: ");
             int reservationId = Convert.ToInt32(Console.ReadLine());
-            _menuItemService.GetMenuItemsByReservationIdAsync(reservationId).Wait();
+            await _menuItemService.GetMenuItemsByReservationIdAsync(reservationId);
         }
     }
 }

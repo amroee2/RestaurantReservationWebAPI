@@ -14,7 +14,7 @@ namespace RestaurantReservationCore.UI
             _tableService = tableService;
         }
 
-        public void DisplayOptions()
+        public async Task DisplayOptionsAsync()
         {
             while (true)
             {
@@ -31,7 +31,7 @@ namespace RestaurantReservationCore.UI
                     {
                         return;
                     }
-                    HandleRequest(option);
+                    await HandleRequestAsync(option);
                 }
                 catch (Exception ex)
                 {
@@ -40,29 +40,29 @@ namespace RestaurantReservationCore.UI
             }
         }
 
-        public void HandleRequest(OperationOptions option)
+        public async Task HandleRequestAsync(OperationOptions option)
         {
             switch (option)
             {
                 case OperationOptions.Add:
-                    AddTable();
+                    await AddTableAsync();
                     break;
                 case OperationOptions.Update:
-                    UpdateTable();
+                    await UpdateTableAsync();
                     break;
                 case OperationOptions.Delete:
-                    DeleteTable();
+                    await DeleteTableAsync();
                     break;
                 case OperationOptions.View:
-                    ViewAllTables();
+                    await ViewAllTablesAsync();
                     break;
                 case OperationOptions.Search:
-                    ViewTableById();
+                    await ViewTableByIdAsync();
                     break;
             }
         }
 
-        public void AddTable()
+        public async Task AddTableAsync()
         {
             Console.WriteLine("Enter table capacity");
             int cpacity = Convert.ToInt32(Console.ReadLine());
@@ -73,10 +73,10 @@ namespace RestaurantReservationCore.UI
                 Capacity = cpacity,
                 RestaurantId = restaurantId
             };
-            _tableService.AddTableAsync(table);
+            await _tableService.AddTableAsync(table);
         }
 
-        public void UpdateTable()
+        public async Task UpdateTableAsync()
         {
             Console.WriteLine("Enter table id");
             int id = Convert.ToInt32(Console.ReadLine());
@@ -89,26 +89,26 @@ namespace RestaurantReservationCore.UI
                 Capacity = cpacity,
                 RestaurantId = restaurantId
             };
-            _tableService.UpdateTableAsync(id, table);
+            await _tableService.UpdateTableAsync(id, table);
         }
 
-        public void DeleteTable()
+        public async Task DeleteTableAsync()
         {
             Console.WriteLine("Enter table id");
             int tableId = Convert.ToInt32(Console.ReadLine());
-            _tableService.DeleteTableAsync(tableId);
+            await _tableService.DeleteTableAsync(tableId);
         }
 
-        public void ViewAllTables()
+        public async Task ViewAllTablesAsync()
         {
-            _tableService.GetAllTablesAsync();
+            await _tableService.GetAllTablesAsync();
         }
 
-        public void ViewTableById()
+        public async Task ViewTableByIdAsync()
         {
             Console.WriteLine("Enter table id:");
             int id = Convert.ToInt32(Console.ReadLine());
-            _tableService.GetTableByIdAsync(id);
+            await _tableService.GetTableByIdAsync(id);
         }
     }
 }

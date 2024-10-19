@@ -14,7 +14,7 @@ namespace RestaurantReservationCore.UI
             _restaurantService = restaurantService;
         }
 
-        public void DisplayOptions()
+        public async Task DisplayOptionsAsync()
         {
             while (true)
             {
@@ -30,7 +30,7 @@ namespace RestaurantReservationCore.UI
                 string input = Console.ReadLine();
                 if (Convert.ToInt32(input) == calculateRestaurantRevenue)
                 {
-                    CalculateRestaurantRevenue();
+                    await CalculateRestaurantRevenueAsync();
                 }
                 try
                 {
@@ -39,7 +39,7 @@ namespace RestaurantReservationCore.UI
                     {
                         return;
                     }
-                    HandleRequest(option);
+                    await HandleRequestAsync(option);
                 }
                 catch (Exception ex)
                 {
@@ -48,48 +48,48 @@ namespace RestaurantReservationCore.UI
             }
         }
 
-        public void HandleRequest(OperationOptions option)
+        public async Task HandleRequestAsync(OperationOptions option)
         {
             switch (option)
             {
                 case OperationOptions.Add:
-                    AddReservation();
+                    await AddReservationAsync();
                     break;
                 case OperationOptions.Update:
-                    UpdateReservation();
+                    await UpdateReservationAsync();
                     break;
                 case OperationOptions.Delete:
-                    DeleteReservation();
+                    await DeleteReservationAsync();
                     break;
                 case OperationOptions.View:
-                    ViewAllReservations();
+                    await ViewAllReservationsAsync();
                     break;
                 case OperationOptions.Search:
-                    ViewReservationById();
+                    await ViewReservationByIdAsync();
                     break;
             }
         }
 
-        private void ViewReservationById()
+        private async Task ViewReservationByIdAsync()
         {
             Console.WriteLine("Enter reservation id:");
             int id = Convert.ToInt32(Console.ReadLine());
-            _restaurantService.GetRestaurantByIdAsync(id);
+            await _restaurantService.GetRestaurantByIdAsync(id);
         }
 
-        private void ViewAllReservations()
+        private async Task ViewAllReservationsAsync()
         {
-            _restaurantService.GetAllRestaurantsAsync();
+            await _restaurantService.GetAllRestaurantsAsync();
         }
 
-        private void DeleteReservation()
+        private async Task DeleteReservationAsync()
         {
             Console.WriteLine("Enter restaurant id:");
             int id = Convert.ToInt32(Console.ReadLine());
-            _restaurantService.DeleteRestaurantAsync(id);
+            await _restaurantService.DeleteRestaurantAsync(id);
         }
 
-        private void UpdateReservation()
+        private async Task UpdateReservationAsync()
         {
             Console.WriteLine("Enter restaurant id");
             int id = Convert.ToInt32(Console.ReadLine());
@@ -108,10 +108,10 @@ namespace RestaurantReservationCore.UI
                 PhoneNumber = phoneNumber,
                 OpeningHours = openingHours
             };
-            _restaurantService.UpdateRestaurantAsync(id, restaurant);
+            await _restaurantService.UpdateRestaurantAsync(id, restaurant);
         }
 
-        private void AddReservation()
+        private async Task AddReservationAsync()
         {
             Console.WriteLine("Enter restaurant name");
             string name = Console.ReadLine();
@@ -128,14 +128,14 @@ namespace RestaurantReservationCore.UI
                 PhoneNumber = phoneNumber,
                 OpeningHours = openingHours
             };
-            _restaurantService.AddRestaurantAsync(restaurant);
+            await _restaurantService.AddRestaurantAsync(restaurant);
         }
 
-        private void CalculateRestaurantRevenue()
+        private async Task CalculateRestaurantRevenueAsync()
         {
             Console.WriteLine("Enter restaurant id:");
             int id = Convert.ToInt32(Console.ReadLine());
-            _restaurantService.CalculateRestaurantRevenue(id);
+            await _restaurantService.CalculateRestaurantRevenueAsync(id);
         }
     }
 }
