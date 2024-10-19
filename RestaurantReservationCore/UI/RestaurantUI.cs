@@ -52,47 +52,47 @@ namespace RestaurantReservationCore.UI
             switch (option)
             {
                 case OperationOptions.Add:
-                    await AddReservationAsync();
+                    await AddRestaurantAsync();
                     break;
 
                 case OperationOptions.Update:
-                    await UpdateReservationAsync();
+                    await UpdateResetaurantAsync();
                     break;
 
                 case OperationOptions.Delete:
-                    await DeleteReservationAsync();
+                    await DeleteRestaurantAsync();
                     break;
 
                 case OperationOptions.View:
-                    await ViewAllReservationsAsync();
+                    await ViewAllRestaurantAsync();
                     break;
 
                 case OperationOptions.Search:
-                    await ViewReservationByIdAsync();
+                    await ViewRestaurantByIdAsync();
                     break;
             }
         }
 
-        private async Task ViewReservationByIdAsync()
+        private async Task ViewRestaurantByIdAsync()
         {
-            Console.WriteLine("Enter reservation id:");
+            Console.WriteLine("Enter restaurant id:");
             int id = Convert.ToInt32(Console.ReadLine());
             await _restaurantService.GetRestaurantByIdAsync(id);
         }
 
-        private async Task ViewAllReservationsAsync()
+        private async Task ViewAllRestaurantAsync()
         {
             await _restaurantService.GetAllRestaurantsAsync();
         }
 
-        private async Task DeleteReservationAsync()
+        private async Task DeleteRestaurantAsync()
         {
             Console.WriteLine("Enter restaurant id:");
             int id = Convert.ToInt32(Console.ReadLine());
             await _restaurantService.DeleteRestaurantAsync(id);
         }
 
-        private async Task UpdateReservationAsync()
+        private async Task UpdateResetaurantAsync()
         {
             Console.WriteLine("Enter restaurant id");
             int id = Convert.ToInt32(Console.ReadLine());
@@ -114,7 +114,7 @@ namespace RestaurantReservationCore.UI
             await _restaurantService.UpdateRestaurantAsync(id, restaurant);
         }
 
-        private async Task AddReservationAsync()
+        private async Task AddRestaurantAsync()
         {
             Console.WriteLine("Enter restaurant name");
             string name = Console.ReadLine();
