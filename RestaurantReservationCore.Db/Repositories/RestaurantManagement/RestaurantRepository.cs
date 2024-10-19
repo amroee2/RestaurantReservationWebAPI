@@ -44,6 +44,10 @@ namespace RestaurantReservationCore.Db.Repositories.RestaurantManagement
                 .Where(t => t.RestaurantId == restaurant.RestaurantId);
             _context.Tables.RemoveRange(tables);
 
+            var reservations = _context.Reservations
+                .Where(r => r.RestaurantId == restaurant.RestaurantId);
+            _context.Reservations.RemoveRange(reservations);
+
             _context.Restaurants.Remove(restaurant);
 
             await _context.SaveChangesAsync();
