@@ -6,6 +6,7 @@ namespace RestaurantReservationCore.Db.Repositories
     public class EmployeeRepository : IEmployeeRepository
     {
         private readonly RestaurantReservationDbContext _context;
+
         public EmployeeRepository(RestaurantReservationDbContext context)
         {
             _context = context;

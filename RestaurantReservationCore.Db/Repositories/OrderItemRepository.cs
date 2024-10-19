@@ -6,6 +6,7 @@ namespace RestaurantReservationCore.Db.Repositories
     public class OrderItemRepository : IRepository<OrderItem>
     {
         private readonly RestaurantReservationDbContext _context;
+
         public OrderItemRepository(RestaurantReservationDbContext context)
         {
             _context = context;

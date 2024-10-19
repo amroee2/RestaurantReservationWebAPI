@@ -6,6 +6,7 @@ namespace RestaurantReservationCore.Db.Repositories
     public class RestaurantRepository : IRestaurantRepository
     {
         private readonly RestaurantReservationDbContext _context;
+
         public RestaurantRepository(RestaurantReservationDbContext context)
         {
             _context = context;
@@ -47,8 +48,6 @@ namespace RestaurantReservationCore.Db.Repositories
 
             await _context.SaveChangesAsync();
         }
-
-
 
         public async Task<decimal> CalculateRestaurantRevenueAsync(int restaurantId)
         {

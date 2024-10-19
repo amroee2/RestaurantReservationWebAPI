@@ -5,8 +5,8 @@ namespace RestaurantReservationCore.Db.Repositories
 {
     public class MenuItemRepository : IMenuRepository
     {
-
         private readonly RestaurantReservationDbContext _context;
+
         public MenuItemRepository(RestaurantReservationDbContext context)
         {
             _context = context;
@@ -42,7 +42,7 @@ namespace RestaurantReservationCore.Db.Repositories
 
         public async Task<List<MenuItem>> GetMenuItemsByReservationIdAsync(int reservationId)
         {
-            var menuItems = await _context.Orders.Where(o=> o.ReservationId == reservationId)
+            var menuItems = await _context.Orders.Where(o => o.ReservationId == reservationId)
                 .Include(o => o.OrderItems)
                 .ThenInclude(o => o.MenuItem)
                 .SelectMany(order => order.OrderItems.Select(oi => oi.MenuItem))

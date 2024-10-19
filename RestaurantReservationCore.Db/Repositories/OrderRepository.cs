@@ -6,6 +6,7 @@ namespace RestaurantReservationCore.Db.Repositories
     public class OrderRepository : IOrderRepository
     {
         private readonly RestaurantReservationDbContext _context;
+
         public OrderRepository(RestaurantReservationDbContext context)
         {
             _context = context;
@@ -41,7 +42,7 @@ namespace RestaurantReservationCore.Db.Repositories
 
         public async Task<List<Order>> GetOrdersByReservationIdAsync(int reservationId)
         {
-            return await _context.Orders.Where(r => r.ReservationId == reservationId).Include(o=>o.OrderItems).ThenInclude(o=>o.MenuItem).ToListAsync();
+            return await _context.Orders.Where(r => r.ReservationId == reservationId).Include(o => o.OrderItems).ThenInclude(o => o.MenuItem).ToListAsync();
         }
     }
 }
