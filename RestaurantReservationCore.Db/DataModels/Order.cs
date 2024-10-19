@@ -10,6 +10,7 @@
         public Reservation Reservation { get; set; }
         public int ReservationId { get; set; }
         public List<OrderItem> OrderItems { get; set; }
+
         public Order()
         {
             OrderItems = new List<OrderItem>();

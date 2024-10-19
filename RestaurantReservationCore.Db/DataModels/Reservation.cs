@@ -12,6 +12,7 @@
         public Restaurant Restaurant { get; set; }
         public int RestaurantId { get; set; }
         public List<Order> Orders { get; set; }
+
         public Reservation()
         {
             Orders = new List<Order>();
