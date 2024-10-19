@@ -1,4 +1,5 @@
-﻿using RestaurantReservationCore.Db;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantReservationCore.Db;
 using RestaurantReservationCore.Db.Repositories;
 using RestaurantReservationCore.Db.Repositories.CustomerManagement;
 using RestaurantReservationCore.Db.Repositories.EmployeeManagement;
@@ -34,7 +35,7 @@ while (true)
     {
         try
         {
-            RestaurantReservationDbContext restaurantReservationDbContext = new RestaurantReservationDbContext();
+            RestaurantReservationDbContext restaurantReservationDbContext = new RestaurantReservationDbContext(new DbContextOptions<RestaurantReservationDbContext>());
             switch (option)
             {
                 case EntityOptions.Customer:

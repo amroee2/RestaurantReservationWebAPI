@@ -6,6 +6,10 @@ namespace RestaurantReservationCore.Db
 {
     public class RestaurantReservationDbContext : DbContext
     {
+
+        public RestaurantReservationDbContext(DbContextOptions<RestaurantReservationDbContext> options) : base(options)
+        {
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
