@@ -23,7 +23,7 @@ namespace RestaurantReservationCore.UI
                 Console.WriteLine("4. View All Employees");
                 Console.WriteLine("5. View Employee By Id");
                 Console.WriteLine("6. View All Managers");
-                Console.WriteLine("7. Employee Total Amount");
+                Console.WriteLine("7. Employee Average Order Amount");
                 Console.WriteLine("0. Go Back");
                 string input = Console.ReadLine();
                 try
