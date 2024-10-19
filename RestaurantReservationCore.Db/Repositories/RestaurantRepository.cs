@@ -35,9 +35,20 @@ namespace RestaurantReservationCore.Db.Repositories
 
         public async Task DeleteAsync(Restaurant restaurant)
         {
+            var employees = _context.Employees
+                .Where(e => e.RestaurantId == restaurant.RestaurantId);
+            _context.Employees.RemoveRange(employees);
+
+            var tables = _context.Tables
+                .Where(t => t.RestaurantId == restaurant.RestaurantId);
+            _context.Tables.RemoveRange(tables);
+
             _context.Restaurants.Remove(restaurant);
+
             await _context.SaveChangesAsync();
         }
+
+
 
         public async Task<decimal> CalculateRestaurantRevenue(int restaurantId)
         {
