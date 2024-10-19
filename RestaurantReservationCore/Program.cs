@@ -1,5 +1,11 @@
 ﻿using RestaurantReservationCore.Db;
 using RestaurantReservationCore.Db.Repositories;
+using RestaurantReservationCore.Db.Repositories.CustomerManagement;
+using RestaurantReservationCore.Db.Repositories.EmployeeManagement;
+using RestaurantReservationCore.Db.Repositories.MenuItemManagement;
+using RestaurantReservationCore.Db.Repositories.OrderManagement;
+using RestaurantReservationCore.Db.Repositories.ReservationManagement;
+using RestaurantReservationCore.Db.Repositories.RestaurantManagement;
 using RestaurantReservationCore.Enums;
 using RestaurantReservationCore.Services;
 using RestaurantReservationCore.UI;
