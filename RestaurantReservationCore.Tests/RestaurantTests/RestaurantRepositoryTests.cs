@@ -92,5 +92,21 @@ namespace RestaurantReservationCore.Tests.RestaurantTests
             // Assert
             Assert.Equal("Updated Name", restaurant.Name);
         }
+
+        [Fact]
+        public async Task DeleteRestaurantAsync_ShouldDeleteRestaurant()
+        {
+            // Arrange
+            var restaurant = _fixture.Create<Restaurant>();
+            await _context.Restaurants.AddAsync(restaurant);
+            await _context.SaveChangesAsync();
+
+            // Act
+            await _restaurantRepository.DeleteAsync(restaurant);
+
+            // Assert
+            var result = await _context.Restaurants.FindAsync(restaurant.RestaurantId);
+            Assert.Null(result);
+        }
     }
 }
