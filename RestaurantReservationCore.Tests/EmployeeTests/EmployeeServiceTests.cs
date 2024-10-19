@@ -231,5 +231,27 @@ namespace RestaurantReservationCore.Tests.EmployeeTests
             _employeeRepositoryMock.Verify(repo => repo.ListAllManagersAsync(), Times.Once);
             Assert.Contains("No managers found", output);
         }
+
+        [Fact]
+        public async Task CalculateAverageOrderAmountAsync_ShouldReturnAveragelAmount()
+        {
+            // Arrange
+            var employee = _fixture.Create<Employee>();
+            var totalAmount = 100.0;
+            var numberOfOrders = 5;
+            _employeeRepositoryMock.Setup(repo => repo.GetEmployeeTotalAmountAsync(employee.EmployeeId)).ReturnsAsync(totalAmount);
+            _employeeRepositoryMock.Setup(repo => repo.GetEmployeeNumberOfOrdersAsync(employee.EmployeeId)).ReturnsAsync(numberOfOrders);
+            // Act
+            var stringWriter = new StringWriter();
+            Console.SetOut(stringWriter);
+            await _employeeService.CalculateAverageOrderAmountAsync(employee.EmployeeId);
+            var output = stringWriter.ToString().Trim();
+            Console.SetOut(Console.Out);
+
+            // Assert
+            _employeeRepositoryMock.Verify(repo => repo.GetEmployeeTotalAmountAsync(employee.EmployeeId), Times.Once);
+            _employeeRepositoryMock.Verify(repo => repo.GetEmployeeNumberOfOrdersAsync(employee.EmployeeId), Times.Once);
+            Assert.Contains("20", output);
+        }
     }
 }
