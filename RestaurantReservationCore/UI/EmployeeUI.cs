@@ -28,7 +28,10 @@ namespace RestaurantReservationCore.UI
                 string input = Console.ReadLine();
                 try
                 {
-                    await ProcessInputAsync(input);
+                    if(await ProcessInputAsync(input))
+                    {
+                        return;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -37,14 +40,15 @@ namespace RestaurantReservationCore.UI
             }
         }
 
-        public async Task ProcessInputAsync(string input)
+        public async Task<bool> ProcessInputAsync(string input)
         {
             if (await TryHandleOperationAsync(input))
             {
-                return;
+                return true;
             }
 
             await TryHandleEmployeeOptionAsync(input);
+            return false;
         }
 
         private async Task<bool> TryHandleOperationAsync(string input)
@@ -57,7 +61,6 @@ namespace RestaurantReservationCore.UI
                 }
 
                 await HandleRequestAsync(option);
-                return true;
             }
             return false;
         }
