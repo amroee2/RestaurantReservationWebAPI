@@ -108,5 +108,25 @@ namespace RestaurantReservationCore.Tests.OrderTests
             var result = await _context.Orders.FindAsync(order.OrderId);
             Assert.Null(result);
         }
+
+        [Fact]
+        public async Task GetOrdersByReservationIdAsync_ShouldReturnOrders()
+        {
+            // Arrange
+            var reservationId = 1;
+            var orders = _fixture.Build<Order>()
+                .With(o => o.ReservationId, reservationId)
+                .Without(o => o.Reservation)
+                .CreateMany(5)
+                .ToList();
+            await _context.Orders.AddRangeAsync(orders);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var result = await _orderRepository.GetOrdersByReservationIdAsync(reservationId);
+
+            // Assert
+            Assert.Equal(orders.Count, result.Count);
+        }
     }
 }
