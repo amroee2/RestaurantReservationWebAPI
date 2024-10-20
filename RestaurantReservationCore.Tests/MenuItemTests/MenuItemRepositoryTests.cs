@@ -108,5 +108,38 @@ namespace RestaurantReservationCore.Tests.MenuItemTests
             var result = await _context.MenuItems.FirstOrDefaultAsync(m => m.MenuItemId == menuItem.MenuItemId);
             Assert.Null(result);
         }
+
+        [Fact]
+        public async Task GetMenuItemsByReservationIdAsync_ShouldReturnMenuItems()
+        {
+            // Arrange
+            var reservationId = 1;
+            var order = _fixture.Build<Order>()
+                .With(o=>o.ReservationId, reservationId)
+                .Without(o => o.Reservation)
+                .Create();
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
+
+            var menuItem = _fixture.Create<MenuItem>();
+            var orderItem = new OrderItem
+            {
+                MenuItem = menuItem,
+                Order = order
+            };
+            await _context.OrderItems.AddAsync(orderItem);
+            await _context.SaveChangesAsync();
+            var menuItems = await _context.Orders.Where(o => o.ReservationId == reservationId)
+                .Include(o => o.OrderItems)
+                .ThenInclude(o => o.MenuItem)
+                .SelectMany(order => order.OrderItems.Select(oi => oi.MenuItem))
+                .ToListAsync();
+
+            // Act
+            var result = await _menuItemRepository.GetMenuItemsByReservationIdAsync(reservationId);
+
+            // Assert
+            Assert.Equal(menuItems.Count(), result.Count);
+        }
     }
 }

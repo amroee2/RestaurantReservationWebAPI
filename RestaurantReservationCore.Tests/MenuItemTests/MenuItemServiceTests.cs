@@ -191,5 +191,47 @@ namespace RestaurantReservationCore.Tests.MenuItemTests
             // Assert
             _menuItemRepository.Verify(repo => repo.DeleteAsync(It.IsAny<MenuItem>()), Times.Never);
         }
+
+        [Fact]
+        public async Task GetMenuItemsByReservationIdAsync_ShouldReturnMenuItems()
+        {
+            // Arrange
+            var menuItems = _fixture.CreateMany<MenuItem>(5).ToList();
+            _menuItemRepository.Setup(repo => repo.GetMenuItemsByReservationIdAsync(1)).ReturnsAsync(menuItems);
+
+            // Act
+            var stringWriter = new StringWriter();
+            Console.SetOut(stringWriter);
+            await _menuItemService.GetMenuItemsByReservationIdAsync(1);
+            var output = stringWriter.ToString();
+            Console.SetOut(Console.Out);
+
+            // Assert
+            _menuItemRepository.Verify(repo => repo.GetMenuItemsByReservationIdAsync(1), Times.Once);
+            foreach (var menuItem in menuItems)
+            {
+                Assert.Contains(menuItem.ToString(), output);
+            }
+        }
+
+        [Fact]
+        public async Task GetMenuItemsByReservationIdAsync_ShouldNotReturnMenuItems()
+        {
+            // Arrange
+            var menuItems = _fixture.CreateMany<MenuItem>(5).ToList();
+            var emptyList = new List<MenuItem>();
+            _menuItemRepository.Setup(repo => repo.GetMenuItemsByReservationIdAsync(1)).ReturnsAsync(emptyList);
+
+            // Act
+            var stringWriter = new StringWriter();
+            Console.SetOut(stringWriter);
+            await _menuItemService.GetMenuItemsByReservationIdAsync(1);
+            var output = stringWriter.ToString();
+            Console.SetOut(Console.Out);
+
+            // Assert
+            _menuItemRepository.Verify(repo => repo.GetMenuItemsByReservationIdAsync(1), Times.Once);
+            Assert.Equal("No menu items found", output.Trim());
+        }
     }
 }
