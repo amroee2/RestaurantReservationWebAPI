@@ -115,7 +115,7 @@ namespace RestaurantReservationCore.Tests.CustomerTests
             var stringWriter = new StringWriter();
             Console.SetOut(stringWriter);
             await _customerService.GetCustomerByIdAsync(customer.CustomerId);
-            var output = stringWriter.ToString().Trim().Split(Environment.NewLine);
+            var output = stringWriter.ToString().Trim();
             Console.SetOut(Console.Out);
             // Assert
             _customerRepositoryMock.Verify(repo => repo.GetByIdAsync(customer.CustomerId), Times.Once);
