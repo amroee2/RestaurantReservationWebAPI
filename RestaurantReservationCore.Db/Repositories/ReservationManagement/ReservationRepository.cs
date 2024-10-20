@@ -15,12 +15,12 @@ namespace RestaurantReservationCore.Db.Repositories.ReservationManagement
 
         public async Task<List<Reservation>> GetAllAsync()
         {
-            return await _context.Reservations.ToListAsync();
+            return await _context.Reservations.AsNoTracking().ToListAsync();
         }
 
         public async Task<Reservation> GetByIdAsync(int id)
         {
-            return await _context.Reservations.FirstOrDefaultAsync(r => r.ReservationId == id);
+            return await _context.Reservations.AsNoTracking().FirstOrDefaultAsync(r => r.ReservationId == id);
         }
 
         public async Task AddAsync(Reservation reservation)
@@ -43,12 +43,12 @@ namespace RestaurantReservationCore.Db.Repositories.ReservationManagement
 
         public async Task<List<Reservation>> GetReservationsByCustomerIdAsync(int customerId)
         {
-            return await _context.Reservations.Where(r => r.CustomerId == customerId).ToListAsync();
+            return await _context.Reservations.AsNoTracking().Where(r => r.CustomerId == customerId).ToListAsync();
         }
 
         public async Task<List<CustomerReservationsByRestaurant>> GetCustomerReservationsByRestaurants()
         {
-            return await _context.CustomerReservationsByRestaurants.ToListAsync();
+            return await _context.CustomerReservationsByRestaurants.AsNoTracking().ToListAsync();
         }
     }
 }

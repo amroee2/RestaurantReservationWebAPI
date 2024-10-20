@@ -14,12 +14,12 @@ namespace RestaurantReservationCore.Db.Repositories.OrderManagement
 
         public async Task<List<Order>> GetAllAsync()
         {
-            return await _context.Orders.ToListAsync();
+            return await _context.Orders.AsNoTracking().ToListAsync();
         }
 
         public async Task<Order> GetByIdAsync(int id)
         {
-            return await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == id);
+            return await _context.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.OrderId == id);
         }
 
         public async Task AddAsync(Order order)
@@ -42,7 +42,7 @@ namespace RestaurantReservationCore.Db.Repositories.OrderManagement
 
         public async Task<List<Order>> GetOrdersByReservationIdAsync(int reservationId)
         {
-            return await _context.Orders.Where(r => r.ReservationId == reservationId).Include(o => o.OrderItems).ThenInclude(o => o.MenuItem).ToListAsync();
+            return await _context.Orders.AsNoTracking().Where(r => r.ReservationId == reservationId).Include(o => o.OrderItems).ThenInclude(o => o.MenuItem).ToListAsync();
         }
     }
 }

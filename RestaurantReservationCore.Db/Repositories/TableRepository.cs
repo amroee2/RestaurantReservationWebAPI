@@ -14,12 +14,12 @@ namespace RestaurantReservationCore.Db.Repositories
 
         public async Task<List<Table>> GetAllAsync()
         {
-            return await _context.Tables.ToListAsync();
+            return await _context.Tables.AsNoTracking().ToListAsync();
         }
 
         public async Task<Table> GetByIdAsync(int id)
         {
-            return await _context.Tables.FirstOrDefaultAsync(t => t.TableId == id);
+            return await _context.Tables.AsNoTracking().FirstOrDefaultAsync(t => t.TableId == id);
         }
 
         public async Task AddAsync(Table table)

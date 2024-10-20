@@ -14,12 +14,12 @@ namespace RestaurantReservationCore.Db.Repositories.MenuItemManagement
 
         public async Task<List<MenuItem>> GetAllAsync()
         {
-            return await _context.MenuItems.ToListAsync();
+            return await _context.MenuItems.AsNoTracking().ToListAsync();
         }
 
         public async Task<MenuItem> GetByIdAsync(int id)
         {
-            return await _context.MenuItems.FirstOrDefaultAsync(m => m.MenuItemId == id);
+            return await _context.MenuItems.AsNoTracking().FirstOrDefaultAsync(m => m.MenuItemId == id);
         }
 
         public async Task AddAsync(MenuItem menuItem)
@@ -42,7 +42,7 @@ namespace RestaurantReservationCore.Db.Repositories.MenuItemManagement
 
         public async Task<List<MenuItem>> GetMenuItemsByReservationIdAsync(int reservationId)
         {
-            var menuItems = await _context.Orders.Where(o => o.ReservationId == reservationId)
+            var menuItems = await _context.Orders.AsNoTracking().Where(o => o.ReservationId == reservationId)
                 .Include(o => o.OrderItems)
                 .ThenInclude(o => o.MenuItem)
                 .SelectMany(order => order.OrderItems.Select(oi => oi.MenuItem))
