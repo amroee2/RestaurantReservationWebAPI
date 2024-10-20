@@ -7,6 +7,10 @@ namespace RestaurantReservationCore.Db
     public class RestaurantReservationDbContext : DbContext
     {
 
+        public RestaurantReservationDbContext()
+        {
+
+        }
         public RestaurantReservationDbContext(DbContextOptions<RestaurantReservationDbContext> options) : base(options)
         {
         }
