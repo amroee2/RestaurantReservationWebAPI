@@ -3,7 +3,9 @@ using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using RestaurantReservationCore.Db;
 using RestaurantReservationCore.Db.Repositories.CustomerManagement;
+using RestaurantReservationCore.Db.Repositories.RestaurantManagement;
 using RestaurantReservationServices.Services.CustomerManagementService;
+using RestaurantReservationServices.Services.RestaurantManagementService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,8 @@ builder.Services.AddFluentValidationAutoValidation()
 
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
 
 var app = builder.Build();
 

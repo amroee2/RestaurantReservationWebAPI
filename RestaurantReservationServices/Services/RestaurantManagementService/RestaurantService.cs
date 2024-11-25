@@ -1,83 +1,56 @@
-﻿using RestaurantReservationCore.Db.DataModels;
+﻿using AutoMapper;
+using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories.RestaurantManagement;
+using RestaurantReservationServices.DTOs.RestaurantDTOs;
 
 namespace RestaurantReservationServices.Services.RestaurantManagementService
 {
     public class RestaurantService: IRestaurantService
     {
         private readonly IRestaurantRepository _restaurantRepository;
-
-        public RestaurantService(IRestaurantRepository restaurantRepository)
+        private readonly IMapper _mapper;
+        public RestaurantService(IRestaurantRepository restaurantRepository, IMapper mapper)
         {
             _restaurantRepository = restaurantRepository;
+            _mapper = mapper;
         }
 
-        public async Task GetAllRestaurantsAsync()
+        public async Task<List<RestaurantReadDTO>> GetAllRestaurantsAsync()
         {
             var restaurants = await _restaurantRepository.GetAllAsync();
-            if (!restaurants.Any())
-            {
-                Console.WriteLine("No restaurants found");
-                return;
-            }
-            foreach (var restaurant in restaurants)
-            {
-                Console.WriteLine(restaurant);
-            }
+            return _mapper.Map<List<RestaurantReadDTO>>(restaurants);
         }
 
-        public async Task GetRestaurantByIdAsync(int id)
+        public async Task<RestaurantReadDTO> GetRestaurantByIdAsync(int id)
         {
             var restaurant = await _restaurantRepository.GetByIdAsync(id);
-            if (restaurant == null)
-            {
-                Console.WriteLine("Restaurant doesn't exist");
-                return;
-            }
-            Console.WriteLine(restaurant);
+            return _mapper.Map<RestaurantReadDTO>(restaurant);
         }
 
-        public async Task AddRestaurantAsync(Restaurant restaurant)
+        public async Task<int> AddRestaurantAsync(RestaurantCreateDTO restaurant)
         {
-            var existingRestaurant = await _restaurantRepository.GetByIdAsync(restaurant.RestaurantId);
-            if (existingRestaurant != null)
-            {
-                Console.WriteLine("Restaurant already exists");
-                return;
-            }
-            await _restaurantRepository.AddAsync(restaurant);
+            var newRestaurant = _mapper.Map<Restaurant>(restaurant);
+            await _restaurantRepository.AddAsync(newRestaurant);
+            return newRestaurant.RestaurantId;
         }
 
-        public async Task UpdateRestaurantAsync(int id, Restaurant restaurant)
+        public async Task UpdateRestaurantAsync(int Id, RestaurantUpdateDTO restaurant)
         {
-            var updatedRestaurant = await _restaurantRepository.GetByIdAsync(id);
-            if (updatedRestaurant == null)
-            {
-                Console.WriteLine("Restaurant doesn't exist");
-                return;
-            }
-            updatedRestaurant.Name = restaurant.Name;
-            updatedRestaurant.Address = restaurant.Address;
-            updatedRestaurant.PhoneNumber = restaurant.PhoneNumber;
-            updatedRestaurant.OpeningHours = restaurant.OpeningHours;
-            await _restaurantRepository.UpdateAsync(updatedRestaurant);
+            var restaurantToUpdate = await _restaurantRepository.GetByIdAsync(Id);
+            _mapper.Map(restaurant, restaurantToUpdate);
+            await _restaurantRepository.UpdateAsync(restaurantToUpdate);
         }
 
         public async Task DeleteRestaurantAsync(int id)
         {
             var restaurant = await _restaurantRepository.GetByIdAsync(id);
-            if (restaurant == null)
-            {
-                Console.WriteLine("Restaurant doesn't exist");
-                return;
-            }
             await _restaurantRepository.DeleteAsync(restaurant);
         }
 
-        public async Task CalculateRestaurantRevenueAsync(int restaurantId)
+        public async Task<decimal> CalculateRestaurantRevenueAsync(int restaurantId)
         {
             var totalRevenue = await _restaurantRepository.CalculateRestaurantRevenueAsync(restaurantId);
-            Console.WriteLine($"Total revenue for restaurant {restaurantId}: {totalRevenue}");
+            return totalRevenue;
         }
     }
 }

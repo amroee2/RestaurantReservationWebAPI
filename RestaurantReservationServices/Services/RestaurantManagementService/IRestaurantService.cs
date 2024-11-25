@@ -1,13 +1,15 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
+using RestaurantReservationServices.DTOs.RestaurantDTOs;
 
 namespace RestaurantReservationServices.Services.RestaurantManagementService
 {
     public interface IRestaurantService
     {
-        Task GetAllRestaurantsAsync();
-        Task GetRestaurantByIdAsync(int id);
-        Task AddRestaurantAsync(Restaurant restaurant);
-        Task UpdateRestaurantAsync(int id, Restaurant restaurant);
-        Task CalculateRestaurantRevenueAsync(int restaurantId);
+        Task<List<RestaurantReadDTO>> GetAllRestaurantsAsync();
+        Task<RestaurantReadDTO> GetRestaurantByIdAsync(int id);
+        Task<int> AddRestaurantAsync(RestaurantCreateDTO restaurant);
+        Task UpdateRestaurantAsync(int id, RestaurantUpdateDTO restaurant);
+        Task DeleteRestaurantAsync(int id);
+        Task <decimal> CalculateRestaurantRevenueAsync(int restaurantId);
     }
 }
