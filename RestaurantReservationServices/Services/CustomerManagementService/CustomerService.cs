@@ -22,9 +22,10 @@ namespace RestaurantReservationServices.Services.CustomerManagementService
             return _mapper.Map<List<CustomerReadDTO>>(customers);
         }
 
-        public async Task<Customer> GetCustomerByIdAsync(int id)
+        public async Task<CustomerReadDTO> GetCustomerByIdAsync(int id)
         {
-            return await _customerRepository.GetByIdAsync(id);
+            var customer = await _customerRepository.GetByIdAsync(id);
+            return _mapper.Map<CustomerReadDTO>(customer);
         }
 
         public async Task AddCustomerAsync(Customer customer)
