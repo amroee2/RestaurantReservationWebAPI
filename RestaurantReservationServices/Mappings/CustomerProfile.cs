@@ -8,6 +8,7 @@ namespace RestaurantReservationServices.Mappings
     {
         public CustomerProfile() {
             CreateMap<Customer, CustomerReadDTO>();
+            CreateMap<CustomerCreateDTO, Customer>();
         }
     }
 }
