@@ -1,5 +1,7 @@
-﻿using RestaurantReservationCore.Db.DataModels;
+﻿using AutoMapper;
+using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories.CustomerManagement;
+using RestaurantReservationServices.DTOs.CustomerDTOs;
 
 namespace RestaurantReservationServices.Services.CustomerManagementService
 {
@@ -7,34 +9,22 @@ namespace RestaurantReservationServices.Services.CustomerManagementService
     {
         private readonly ICustomerRepository _customerRepository;
 
-        public CustomerService(ICustomerRepository customerRepository)
+        private readonly IMapper _mapper;
+        public CustomerService(ICustomerRepository customerRepository, IMapper mapper)
         {
             _customerRepository = customerRepository;
+            _mapper = mapper;
         }
 
-        public async Task GetAllCustomersAsync()
+        public async Task<List<CustomerReadDTO>> GetAllCustomersAsync()
         {
-            List<Customer> customers = await _customerRepository.GetAllAsync();
-            if (!customers.Any())
-            {
-                Console.WriteLine("No customers found");
-                return;
-            }
-            foreach (var customer in customers)
-            {
-                Console.WriteLine(customer);
-            }
+            var customers = await _customerRepository.GetAllAsync();
+            return _mapper.Map<List<CustomerReadDTO>>(customers);
         }
 
-        public async Task GetCustomerByIdAsync(int id)
+        public async Task<Customer> GetCustomerByIdAsync(int id)
         {
-            Customer customer = await _customerRepository.GetByIdAsync(id);
-            if (customer == null)
-            {
-                Console.WriteLine("Customer not found");
-                return;
-            }
-            Console.WriteLine(customer);
+            return await _customerRepository.GetByIdAsync(id);
         }
 
         public async Task AddCustomerAsync(Customer customer)
