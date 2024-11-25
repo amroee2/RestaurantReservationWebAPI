@@ -48,18 +48,10 @@ namespace RestaurantReservationServices.Services.CustomerManagementService
             await _customerRepository.DeleteAsync(customer);
         }
 
-        public async Task GetCustomersWithBigPartySizeAsync(int partySize)
+        public async Task<List<CustomerReadDTO>> GetCustomersWithBigPartySizeAsync(int partySize)
         {
             var customers = await _customerRepository.GetCustomersWithBigPartySizeAsync(partySize);
-            if (!customers.Any())
-            {
-                Console.WriteLine("No customers found");
-                return;
-            }
-            foreach (var customer in customers)
-            {
-                Console.WriteLine(customer);
-            }
+            return _mapper.Map<List<CustomerReadDTO>>(customers);
         }
     }
 }

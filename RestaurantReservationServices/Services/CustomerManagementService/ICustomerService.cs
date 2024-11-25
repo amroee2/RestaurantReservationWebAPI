@@ -10,6 +10,6 @@ namespace RestaurantReservationServices.Services.CustomerManagementService
         Task<int> AddCustomerAsync(CustomerCreateDTO customer);
         Task UpdateCustomerAsync(int Id, CustomerUpdateDTO customer);
         Task DeleteCustomerAsync(int Id);
-        Task GetCustomersWithBigPartySizeAsync(int partySize);
+        Task<List<CustomerReadDTO>> GetCustomersWithBigPartySizeAsync(int partySize);
     }
 }

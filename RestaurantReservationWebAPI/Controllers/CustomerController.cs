@@ -113,5 +113,15 @@ namespace RestaurantReservationWebAPI.Controllers
             await _customerService.UpdateCustomerAsync(id, customerToPatch);
             return NoContent();
         }
+
+        [HttpGet("bigPartySize/{partySize}")]
+        public async Task<ActionResult> GetCustomersWithBigPartySize(int partySize)
+        {
+            if (partySize <= 0)
+            {
+                return BadRequest("Party size must be larger than 0");
+            }
+            return Ok(await _customerService.GetCustomersWithBigPartySizeAsync(partySize));
+        }
     }
 }
