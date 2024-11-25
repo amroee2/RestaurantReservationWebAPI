@@ -35,19 +35,11 @@ namespace RestaurantReservationServices.Services.CustomerManagementService
             return newCustomer.CustomerId;
         }
 
-        public async Task UpdateCustomerAsync(int Id, Customer customer)
+        public async Task UpdateCustomerAsync(int Id, CustomerUpdateDTO customer)
         {
-            Customer updatedCustomer = await _customerRepository.GetByIdAsync(Id);
-            if (updatedCustomer == null)
-            {
-                Console.WriteLine("Customer not found");
-                return;
-            }
-            updatedCustomer.PhoneNumber = customer.PhoneNumber;
-            updatedCustomer.Email = customer.Email;
-            updatedCustomer.FirstName = customer.FirstName;
-            updatedCustomer.LastName = customer.LastName;
-            await _customerRepository.UpdateAsync(updatedCustomer);
+            var customerToUpdate = await _customerRepository.GetByIdAsync(Id);
+            _mapper.Map(customer, customerToUpdate);
+            await _customerRepository.UpdateAsync(customerToUpdate);
         }
 
         public async Task DeleteCustomerAsync(int id)

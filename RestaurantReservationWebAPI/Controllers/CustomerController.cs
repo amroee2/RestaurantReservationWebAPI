@@ -66,5 +66,22 @@ namespace RestaurantReservationWebAPI.Controllers
             await _customerService.DeleteCustomerAsync(id);
             return NoContent();
         }
+
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCustomer(int id, CustomerUpdateDTO customerDto)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Customer Id must be larger than 0");
+            }
+            var customer = await _customerService.GetCustomerByIdAsync(id);
+            if (customer == null)
+            {
+                return NotFound("Customer doesn't exit");
+            }
+            await _customerService.UpdateCustomerAsync(id, customerDto);
+            return NoContent();
+        }
     }
 }
