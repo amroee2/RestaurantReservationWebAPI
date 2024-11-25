@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationServices.DTOs.CustomerDTOs;
 using RestaurantReservationServices.Services.CustomerManagementService;
 
@@ -10,10 +12,12 @@ namespace RestaurantReservationWebAPI.Controllers
     {
 
         private readonly ICustomerService _customerService;
+        private readonly IMapper _mapper;
 
-        public CustomerController(ICustomerService customerService)
+        public CustomerController(ICustomerService customerService, IMapper mapper)
         {
             _customerService = customerService;
+            mapper = _mapper;
         }
 
         [HttpGet]
@@ -81,6 +85,34 @@ namespace RestaurantReservationWebAPI.Controllers
                 return NotFound("Customer doesn't exit");
             }
             await _customerService.UpdateCustomerAsync(id, customerDto);
+            return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PartiallyUpdateCustomer(int id, JsonPatchDocument<CustomerUpdateDTO> patchDoc)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Customer Id must be larger than 0");
+            }
+            var customer = await _customerService.GetCustomerByIdAsync(id);
+            if (customer == null)
+            {
+                return NotFound("Customer doesn't exit");
+            }
+            var customerToPatch = new CustomerUpdateDTO()
+            {
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Email = customer.Email,
+                PhoneNumber = customer.PhoneNumber
+            };
+            patchDoc.ApplyTo(customerToPatch, ModelState);
+            if (!TryValidateModel(customerToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
+            await _customerService.UpdateCustomerAsync(id, customerToPatch);
             return NoContent();
         }
     }

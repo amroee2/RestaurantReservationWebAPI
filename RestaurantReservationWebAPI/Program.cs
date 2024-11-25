@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using RestaurantReservationCore.Db;
 using RestaurantReservationCore.Db.Repositories.CustomerManagement;
 using RestaurantReservationServices.Services.CustomerManagementService;
-using RestaurantReservationServices.Validators.CustomerValidator;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+                .AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
