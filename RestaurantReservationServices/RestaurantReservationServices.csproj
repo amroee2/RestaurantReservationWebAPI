@@ -15,8 +15,4 @@
     <ProjectReference Include="..\RestaurantReservationCore.Db\RestaurantReservationCore.Db.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Validators\CustomerValidator\" />
-  </ItemGroup>
-
 </Project>

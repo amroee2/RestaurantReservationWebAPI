@@ -28,15 +28,11 @@ namespace RestaurantReservationServices.Services.CustomerManagementService
             return _mapper.Map<CustomerReadDTO>(customer);
         }
 
-        public async Task AddCustomerAsync(Customer customer)
+        public async Task<int> AddCustomerAsync(CustomerCreateDTO customer)
         {
-            Customer requestedCustomer = await _customerRepository.GetByIdAsync(customer.CustomerId);
-            if (requestedCustomer != null)
-            {
-                Console.WriteLine("Customer already exists");
-                return;
-            }
-            await _customerRepository.AddAsync(customer);
+            var newCustomer = _mapper.Map<Customer>(customer);
+            await _customerRepository.AddAsync(newCustomer);
+            return newCustomer.CustomerId;
         }
 
         public async Task UpdateCustomerAsync(int Id, Customer customer)
@@ -56,12 +52,7 @@ namespace RestaurantReservationServices.Services.CustomerManagementService
 
         public async Task DeleteCustomerAsync(int id)
         {
-            Customer customer = await _customerRepository.GetByIdAsync(id);
-            if (customer == null)
-            {
-                Console.WriteLine("Customer not found");
-                return;
-            }
+            var customer = await _customerRepository.GetByIdAsync(id);
             await _customerRepository.DeleteAsync(customer);
         }
 

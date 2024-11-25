@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RestaurantReservationServices.DTOs.CustomerDTOs;
 using RestaurantReservationServices.Services.CustomerManagementService;
 
 namespace RestaurantReservationWebAPI.Controllers
@@ -34,6 +35,35 @@ namespace RestaurantReservationWebAPI.Controllers
                 return NotFound();
             }
             return Ok(customer);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCustomer(CustomerCreateDTO customerDto)
+        {
+            int customerID = await _customerService.AddCustomerAsync(customerDto);
+
+            var response = new
+            {
+                customerId = customerID,
+                customer = customerDto
+            };
+
+            return CreatedAtAction(nameof(GetCustomerById), new { id = customerID }, response);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCustomer(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Customer Id must be larger than 0");
+            }
+            var customer = await _customerService.GetCustomerByIdAsync(id);
+            if (customer == null)
+            {
+                return NotFound("Customer doesn't exit");
+            }
+            return NoContent();
         }
     }
 }
