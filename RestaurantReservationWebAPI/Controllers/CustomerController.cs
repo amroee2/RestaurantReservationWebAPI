@@ -63,6 +63,7 @@ namespace RestaurantReservationWebAPI.Controllers
             {
                 return NotFound("Customer doesn't exit");
             }
+            await _customerService.DeleteCustomerAsync(id);
             return NoContent();
         }
     }
