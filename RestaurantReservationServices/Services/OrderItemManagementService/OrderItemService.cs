@@ -1,9 +1,9 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories;
 
-namespace RestaurantReservationCore.Services
+namespace RestaurantReservationServices.Services.OrderItemManagementService
 {
-    public class OrderItemService
+    public class OrderItemService: IOrderItemService
     {
         private readonly IRepository<OrderItem> _orderItemRepository;
 

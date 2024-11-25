@@ -1,9 +1,9 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories.OrderManagement;
 
-namespace RestaurantReservationCore.Services
+namespace RestaurantReservationServices.Services.OrderManagementService
 {
-    public class OrderService
+    public class OrderService: IOrderService
     {
         private readonly IOrderRepository _orderRepository;
 

@@ -1,9 +1,9 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories.EmployeeManagement;
 
-namespace RestaurantReservationCore.Services
+namespace RestaurantReservationServices.Services.EmployeeManagementService
 {
-    public class EmployeeService
+    public class EmployeeService: IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
 

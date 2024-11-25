@@ -1,9 +1,9 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories.MenuItemManagement;
 
-namespace RestaurantReservationCore.Services
+namespace RestaurantReservationServices.Services.MenuItemManagementService
 {
-    public class MenuItemService
+    public class MenuItemService: IMenuItemService
     {
         private readonly IMenuItemRepository _menuItemRepository;
 

@@ -1,9 +1,9 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories;
 
-namespace RestaurantReservationCore.Services
+namespace RestaurantReservationServices.Services.TableManagementService
 {
-    public class TableService
+    public class TableService: ITableService
     {
         private readonly IRepository<Table> _tableRepository;
 

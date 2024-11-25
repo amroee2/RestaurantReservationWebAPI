@@ -2,9 +2,9 @@
 using RestaurantReservationCore.Db.Repositories.ReservationManagement;
 using RestaurantReservationCore.Db.Views;
 
-namespace RestaurantReservationCore.Services
+namespace RestaurantReservationServices.Services.ReservationManagementService
 {
-    public class ReservationService
+    public class ReservationService: IReservationService
     {
         private readonly IReservationRepository _reservationRepository;
 
