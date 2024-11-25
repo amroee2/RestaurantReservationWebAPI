@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationServices.Services.CustomerManagementService;
 
 namespace RestaurantReservationWebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Customers")]
     [ApiController]
     public class CustomerController : ControllerBase
     {
@@ -16,10 +15,21 @@ namespace RestaurantReservationWebAPI.Controllers
             _customerService = customerService;
         }
 
-        [HttpGet("Customers")]
+        [HttpGet]
         public async Task<ActionResult> GetAllCustomers()
         {
             return Ok(await _customerService.GetAllCustomersAsync());
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetCustomerById(int id)
+        {
+            var customer = await _customerService.GetCustomerByIdAsync(id);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+            return Ok(customer);
         }
     }
 }
