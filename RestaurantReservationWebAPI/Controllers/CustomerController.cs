@@ -12,12 +12,10 @@ namespace RestaurantReservationWebAPI.Controllers
     {
 
         private readonly ICustomerService _customerService;
-        private readonly IMapper _mapper;
 
-        public CustomerController(ICustomerService customerService, IMapper mapper)
+        public CustomerController(ICustomerService customerService)
         {
             _customerService = customerService;
-            mapper = _mapper;
         }
 
         [HttpGet]
