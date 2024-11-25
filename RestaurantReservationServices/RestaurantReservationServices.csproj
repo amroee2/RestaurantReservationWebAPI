@@ -8,10 +8,15 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="FluentValidation" Version="11.5.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RestaurantReservationCore.Db\RestaurantReservationCore.Db.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Validators\CustomerValidator\" />
   </ItemGroup>
 
 </Project>

@@ -24,6 +24,10 @@ namespace RestaurantReservationWebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetCustomerById(int id)
         {
+            if(id <= 0)
+            {
+                return BadRequest("Customer Id must be larger than 0");
+            }
             var customer = await _customerService.GetCustomerByIdAsync(id);
             if (customer == null)
             {
