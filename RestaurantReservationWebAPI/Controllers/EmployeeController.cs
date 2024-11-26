@@ -141,5 +141,24 @@ namespace RestaurantReservationWebAPI.Controllers
             var managers = await _employeeService.GetAllManagersAsync();
             return Ok(managers);
         }
+
+        [HttpGet("{employeeId}/average-order-amount")]
+        public async Task<ActionResult<double>> CalculateAverageOrderAmountAsync(int employeeId)
+        {
+            if (employeeId <= 0)
+            {
+                return BadRequest("Employee Id must be larger than 0");
+            }
+            try
+            {
+                var employee = await _employeeService.GetEmployeeByIdAsync(employeeId);
+                var averageOrderAmount = await _employeeService.CalculateAverageOrderAmountAsync(employeeId);
+                return Ok(averageOrderAmount);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }
