@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using RestaurantReservationServices.DTOs.CustomerDTOs;
 using RestaurantReservationServices.DTOs.RestaurantDTOs;
+using RestaurantReservationServices.Exceptions;
 using RestaurantReservationServices.Services.RestaurantManagementService;
 
 namespace RestaurantReservationWebAPI.Controllers
@@ -31,12 +30,15 @@ namespace RestaurantReservationWebAPI.Controllers
             {
                 return BadRequest("Restaurant Id must be larger than 0");
             }
-            var restaurant = await _restaurantService.GetRestaurantByIdAsync(id);
-            if (restaurant == null)
+            try
             {
-                return NotFound();
+                var restaurant = await _restaurantService.GetRestaurantByIdAsync(id);
+                return Ok(restaurant);
             }
-            return Ok(restaurant);
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPost]
@@ -60,10 +62,13 @@ namespace RestaurantReservationWebAPI.Controllers
             {
                 return BadRequest("Restaurant Id must be larger than 0");
             }
-            var restaurant = await _restaurantService.GetRestaurantByIdAsync(id);
-            if (restaurant == null)
+            try
             {
-                return NotFound();
+                var restaurant = await _restaurantService.GetRestaurantByIdAsync(id);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             await _restaurantService.UpdateRestaurantAsync(id, restaurantDto);
             return NoContent();
@@ -76,10 +81,13 @@ namespace RestaurantReservationWebAPI.Controllers
             {
                 return BadRequest("Restaurant Id must be larger than 0");
             }
-            var restaurant = await _restaurantService.GetRestaurantByIdAsync(id);
-            if (restaurant == null)
+            try
             {
-                return NotFound();
+                var restaurant = await _restaurantService.GetRestaurantByIdAsync(id);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             await _restaurantService.DeleteRestaurantAsync(id);
             return NoContent();
@@ -92,25 +100,28 @@ namespace RestaurantReservationWebAPI.Controllers
             {
                 return BadRequest("Restaurant Id must be larger than 0");
             }
-            var restaurant = await _restaurantService.GetRestaurantByIdAsync(id);
-            if (restaurant == null)
+            try
             {
-                return NotFound("Customer doesn't exit");
+                var restaurant = await _restaurantService.GetRestaurantByIdAsync(id);
+                var restaurantToPatch = new RestaurantUpdateDTO()
+                {
+                    Name = restaurant.Name,
+                    Address = restaurant.Address,
+                    PhoneNumber = restaurant.PhoneNumber,
+                    OpeningHours = restaurant.OpeningHours
+                };
+                patchDoc.ApplyTo(restaurantToPatch, ModelState);
+                if (!TryValidateModel(restaurantToPatch))
+                {
+                    return ValidationProblem(ModelState);
+                }
+                await _restaurantService.UpdateRestaurantAsync(id, restaurantToPatch);
+                return NoContent();
             }
-            var restaurantToPatch = new RestaurantUpdateDTO()
+            catch (EntityNotFoundException ex)
             {
-                Name = restaurant.Name,
-                Address = restaurant.Address,
-                PhoneNumber = restaurant.PhoneNumber,
-                OpeningHours = restaurant.OpeningHours
-            };
-            patchDoc.ApplyTo(restaurantToPatch, ModelState);
-            if (!TryValidateModel(restaurantToPatch))
-            {
-                return ValidationProblem(ModelState);
+                return NotFound(ex.Message);
             }
-            await _restaurantService.UpdateRestaurantAsync(id, restaurantToPatch);
-            return NoContent();
         }
     }
 }

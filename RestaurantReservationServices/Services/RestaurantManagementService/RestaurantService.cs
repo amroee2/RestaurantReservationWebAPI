@@ -2,6 +2,7 @@
 using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories.RestaurantManagement;
 using RestaurantReservationServices.DTOs.RestaurantDTOs;
+using RestaurantReservationServices.Exceptions;
 
 namespace RestaurantReservationServices.Services.RestaurantManagementService
 {
@@ -24,6 +25,10 @@ namespace RestaurantReservationServices.Services.RestaurantManagementService
         public async Task<RestaurantReadDTO> GetRestaurantByIdAsync(int id)
         {
             var restaurant = await _restaurantRepository.GetByIdAsync(id);
+            if (restaurant == null)
+            {
+                throw new EntityNotFoundException("Restaurant not found");
+            }
             return _mapper.Map<RestaurantReadDTO>(restaurant);
         }
 
@@ -37,6 +42,10 @@ namespace RestaurantReservationServices.Services.RestaurantManagementService
         public async Task UpdateRestaurantAsync(int Id, RestaurantUpdateDTO restaurant)
         {
             var restaurantToUpdate = await _restaurantRepository.GetByIdAsync(Id);
+            if (restaurant == null)
+            {
+                throw new EntityNotFoundException("Restaurant not found");
+            }
             _mapper.Map(restaurant, restaurantToUpdate);
             await _restaurantRepository.UpdateAsync(restaurantToUpdate);
         }
@@ -44,6 +53,10 @@ namespace RestaurantReservationServices.Services.RestaurantManagementService
         public async Task DeleteRestaurantAsync(int id)
         {
             var restaurant = await _restaurantRepository.GetByIdAsync(id);
+            if (restaurant == null)
+            {
+                throw new EntityNotFoundException("Restaurant not found");
+            }
             await _restaurantRepository.DeleteAsync(restaurant);
         }
 
