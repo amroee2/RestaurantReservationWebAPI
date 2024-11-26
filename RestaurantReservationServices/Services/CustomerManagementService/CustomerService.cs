@@ -2,6 +2,7 @@
 using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories.CustomerManagement;
 using RestaurantReservationServices.DTOs.CustomerDTOs;
+using RestaurantReservationServices.Exceptions;
 
 namespace RestaurantReservationServices.Services.CustomerManagementService
 {
@@ -25,6 +26,10 @@ namespace RestaurantReservationServices.Services.CustomerManagementService
         public async Task<CustomerReadDTO> GetCustomerByIdAsync(int id)
         {
             var customer = await _customerRepository.GetByIdAsync(id);
+            if (customer == null)
+            {
+                throw new EntityNotFoundException("Customer not found");
+            }
             return _mapper.Map<CustomerReadDTO>(customer);
         }
 
@@ -38,6 +43,10 @@ namespace RestaurantReservationServices.Services.CustomerManagementService
         public async Task UpdateCustomerAsync(int Id, CustomerUpdateDTO customer)
         {
             var customerToUpdate = await _customerRepository.GetByIdAsync(Id);
+            if (customer == null)
+            {
+                throw new EntityNotFoundException("Customer not found");
+            }
             _mapper.Map(customer, customerToUpdate);
             await _customerRepository.UpdateAsync(customerToUpdate);
         }
@@ -45,6 +54,10 @@ namespace RestaurantReservationServices.Services.CustomerManagementService
         public async Task DeleteCustomerAsync(int id)
         {
             var customer = await _customerRepository.GetByIdAsync(id);
+            if (customer == null)
+            {
+                throw new EntityNotFoundException("Customer not found");
+            }
             await _customerRepository.DeleteAsync(customer);
         }
 

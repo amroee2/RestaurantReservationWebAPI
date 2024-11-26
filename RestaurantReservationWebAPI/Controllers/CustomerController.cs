@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationServices.DTOs.CustomerDTOs;
+using RestaurantReservationServices.Exceptions;
 using RestaurantReservationServices.Services.CustomerManagementService;
 
 namespace RestaurantReservationWebAPI.Controllers
@@ -27,16 +27,19 @@ namespace RestaurantReservationWebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetCustomerById(int id)
         {
-            if(id <= 0)
+            if (id <= 0)
             {
                 return BadRequest("Customer Id must be larger than 0");
             }
-            var customer = await _customerService.GetCustomerByIdAsync(id);
-            if (customer == null)
+            try
             {
-                return NotFound();
+                var customer = await _customerService.GetCustomerByIdAsync(id);
+                return Ok(customer);
             }
-            return Ok(customer);
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPost]
@@ -60,10 +63,13 @@ namespace RestaurantReservationWebAPI.Controllers
             {
                 return BadRequest("Customer Id must be larger than 0");
             }
-            var customer = await _customerService.GetCustomerByIdAsync(id);
-            if (customer == null)
+            try
             {
-                return NotFound("Customer doesn't exit");
+                var customer = await _customerService.GetCustomerByIdAsync(id);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             await _customerService.DeleteCustomerAsync(id);
             return NoContent();
@@ -77,10 +83,13 @@ namespace RestaurantReservationWebAPI.Controllers
             {
                 return BadRequest("Customer Id must be larger than 0");
             }
-            var customer = await _customerService.GetCustomerByIdAsync(id);
-            if (customer == null)
+            try
             {
-                return NotFound("Customer doesn't exit");
+                var customer = await _customerService.GetCustomerByIdAsync(id);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             await _customerService.UpdateCustomerAsync(id, customerDto);
             return NoContent();
@@ -93,25 +102,28 @@ namespace RestaurantReservationWebAPI.Controllers
             {
                 return BadRequest("Customer Id must be larger than 0");
             }
-            var customer = await _customerService.GetCustomerByIdAsync(id);
-            if (customer == null)
+            try
             {
-                return NotFound("Customer doesn't exit");
+                var customer = await _customerService.GetCustomerByIdAsync(id);
+                var customerToPatch = new CustomerUpdateDTO()
+                {
+                    FirstName = customer.FirstName,
+                    LastName = customer.LastName,
+                    Email = customer.Email,
+                    PhoneNumber = customer.PhoneNumber
+                };
+                patchDoc.ApplyTo(customerToPatch, ModelState);
+                if (!TryValidateModel(customerToPatch))
+                {
+                    return ValidationProblem(ModelState);
+                }
+                await _customerService.UpdateCustomerAsync(id, customerToPatch);
+                return NoContent();
             }
-            var customerToPatch = new CustomerUpdateDTO()
+            catch (EntityNotFoundException ex)
             {
-                FirstName = customer.FirstName,
-                LastName = customer.LastName,
-                Email = customer.Email,
-                PhoneNumber = customer.PhoneNumber
-            };
-            patchDoc.ApplyTo(customerToPatch, ModelState);
-            if (!TryValidateModel(customerToPatch))
-            {
-                return ValidationProblem(ModelState);
+                return NotFound(ex.Message);
             }
-            await _customerService.UpdateCustomerAsync(id, customerToPatch);
-            return NoContent();
         }
 
         [HttpGet("bigPartySize/{partySize}")]
