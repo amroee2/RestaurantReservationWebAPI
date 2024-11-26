@@ -1,6 +1,7 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using RestaurantReservationCore.Db;
 using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories;
@@ -18,6 +19,7 @@ using RestaurantReservationServices.Services.OrderManagementService;
 using RestaurantReservationServices.Services.ReservationManagementService;
 using RestaurantReservationServices.Services.RestaurantManagementService;
 using RestaurantReservationServices.Services.TableManagementService;
+using RestaurantReservationWebAPI.TokenGenerators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +55,22 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 builder.Services.AddScoped<IRepository<OrderItem>, OrderItemRepository>();
+builder.Services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidAudience = builder.Configuration["Authentication:Audience"],
+            ValidIssuer = builder.Configuration["Authentication:Issuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Convert.FromBase64String(builder.Configuration["Authentication:SecretForKey"]))
+        };
+    });
 
 var app = builder.Build();
 
