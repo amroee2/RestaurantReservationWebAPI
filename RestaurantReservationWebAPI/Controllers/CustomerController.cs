@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationServices.DTOs.CustomerDTOs;
+using RestaurantReservationServices.DTOs.EmployeeDTOs;
 using RestaurantReservationServices.Exceptions;
 using RestaurantReservationServices.Services.CustomerManagementService;
 
@@ -12,10 +15,12 @@ namespace RestaurantReservationWebAPI.Controllers
     {
 
         private readonly ICustomerService _customerService;
+        private readonly IMapper _mapper;
 
-        public CustomerController(ICustomerService customerService)
+        public CustomerController(ICustomerService customerService, IMapper mapper)
         {
             _customerService = customerService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -105,13 +110,7 @@ namespace RestaurantReservationWebAPI.Controllers
             try
             {
                 var customer = await _customerService.GetCustomerByIdAsync(id);
-                var customerToPatch = new CustomerUpdateDTO()
-                {
-                    FirstName = customer.FirstName,
-                    LastName = customer.LastName,
-                    Email = customer.Email,
-                    PhoneNumber = customer.PhoneNumber
-                };
+                var customerToPatch = _mapper.Map<CustomerUpdateDTO>(customer);
                 patchDoc.ApplyTo(customerToPatch, ModelState);
                 if (!TryValidateModel(customerToPatch))
                 {

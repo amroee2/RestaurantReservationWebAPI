@@ -10,6 +10,7 @@ namespace RestaurantReservationServices.Mappings
             CreateMap<Customer, CustomerReadDTO>();
             CreateMap<CustomerCreateDTO, Customer>();
             CreateMap<CustomerUpdateDTO, Customer>();
+            CreateMap<CustomerReadDTO, CustomerUpdateDTO>().ReverseMap();
         }
     }
 }
