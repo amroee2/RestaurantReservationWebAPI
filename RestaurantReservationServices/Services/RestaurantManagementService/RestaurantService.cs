@@ -42,10 +42,6 @@ namespace RestaurantReservationServices.Services.RestaurantManagementService
         public async Task UpdateRestaurantAsync(int Id, RestaurantUpdateDTO restaurant)
         {
             var restaurantToUpdate = await _restaurantRepository.GetByIdAsync(Id);
-            if (restaurant == null)
-            {
-                throw new EntityNotFoundException("Restaurant not found");
-            }
             _mapper.Map(restaurant, restaurantToUpdate);
             await _restaurantRepository.UpdateAsync(restaurantToUpdate);
         }
@@ -53,10 +49,6 @@ namespace RestaurantReservationServices.Services.RestaurantManagementService
         public async Task DeleteRestaurantAsync(int id)
         {
             var restaurant = await _restaurantRepository.GetByIdAsync(id);
-            if (restaurant == null)
-            {
-                throw new EntityNotFoundException("Restaurant not found");
-            }
             await _restaurantRepository.DeleteAsync(restaurant);
         }
 
