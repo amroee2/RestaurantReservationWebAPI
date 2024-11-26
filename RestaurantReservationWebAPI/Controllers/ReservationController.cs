@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationServices.DTOs.MenuItemDTOs;
@@ -15,6 +16,7 @@ using RestaurantReservationServices.Services.TableManagementService;
 namespace RestaurantReservationWebAPI.Controllers
 {
     [Route("api/Reservations")]
+    [Authorize]
     [ApiController]
     public class ReservationController : ControllerBase
     {
