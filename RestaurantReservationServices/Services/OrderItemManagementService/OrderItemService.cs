@@ -1,75 +1,54 @@
-﻿using RestaurantReservationCore.Db.DataModels;
+﻿using AutoMapper;
+using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories;
+using RestaurantReservationServices.DTOs.OrderItemDTOs;
+using RestaurantReservationServices.Exceptions;
 
 namespace RestaurantReservationServices.Services.OrderItemManagementService
 {
     public class OrderItemService: IOrderItemService
     {
         private readonly IRepository<OrderItem> _orderItemRepository;
-
-        public OrderItemService(IRepository<OrderItem> orderItemRepository)
+        private readonly IMapper _mapper;
+        public OrderItemService(IRepository<OrderItem> orderItemRepository, IMapper mapper)
         {
             _orderItemRepository = orderItemRepository;
+            _mapper = mapper;
         }
 
-        public async Task GetAllOrderItemsAsync()
+        public async Task<List<OrderItemReadDTO>> GetAllOrderItemsAsync()
         {
-            List<OrderItem> orderItems = await _orderItemRepository.GetAllAsync();
-            if (!orderItems.Any())
-            {
-                Console.WriteLine("No order items found");
-                return;
-            }
-            foreach (var orderItem in orderItems)
-            {
-                Console.WriteLine(orderItem);
-            }
+            var orderItems = await _orderItemRepository.GetAllAsync();
+            return _mapper.Map<List<OrderItemReadDTO>>(orderItems);
         }
 
-        public async Task GetOrderItemByIdAsync(int id)
+        public async Task<OrderItemReadDTO> GetOrderItemByIdAsync(int id)
         {
-            OrderItem orderItem = await _orderItemRepository.GetByIdAsync(id);
+            var orderItem = await _orderItemRepository.GetByIdAsync(id);
             if (orderItem == null)
             {
-                Console.WriteLine("Order item not found");
-                return;
+                throw new EntityNotFoundException("Order item not found");
             }
-            Console.WriteLine(orderItem);
+            return _mapper.Map<OrderItemReadDTO>(orderItem);
         }
 
-        public async Task AddOrderItemAsync(OrderItem orderItem)
+        public async Task<int> AddOrderItemAsync(OrderItemCreateDTO orderItem)
         {
-            OrderItem requestedOrderItem = await _orderItemRepository.GetByIdAsync(orderItem.OrderItemId);
-            if (requestedOrderItem != null)
-            {
-                Console.WriteLine("Order item already exists");
-                return;
-            }
-            await _orderItemRepository.AddAsync(orderItem);
+            var newOrderItem = _mapper.Map<OrderItem>(orderItem);
+            await _orderItemRepository.AddAsync(newOrderItem);
+            return newOrderItem.OrderItemId;
         }
 
-        public async Task UpdateOrderItemAsync(int id, OrderItem orderItem)
+        public async Task UpdateOrderItemAsync(int id, OrderItemUpdateDTO orderItem)
         {
-            OrderItem updatedOrderItem = await _orderItemRepository.GetByIdAsync(id);
-            if (updatedOrderItem == null)
-            {
-                Console.WriteLine("Order Item not found");
-                return;
-            }
-            updatedOrderItem.Quantity = orderItem.Quantity;
-            updatedOrderItem.MenuItem = orderItem.MenuItem;
-            updatedOrderItem.OrderId = orderItem.OrderId;
-            await _orderItemRepository.UpdateAsync(updatedOrderItem);
+            var orderItemToUpdate = await _orderItemRepository.GetByIdAsync(id);
+            _mapper.Map(orderItem, orderItemToUpdate);
+            await _orderItemRepository.UpdateAsync(orderItemToUpdate);
         }
 
         public async Task DeleteOrderItemAsync(int id)
         {
             var orderItem = await _orderItemRepository.GetByIdAsync(id);
-            if (orderItem == null)
-            {
-                Console.WriteLine("Order item doesn't exist");
-                return;
-            }
             await _orderItemRepository.DeleteAsync(orderItem);
         }
     }

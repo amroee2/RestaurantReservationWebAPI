@@ -1,12 +1,14 @@
 ﻿using RestaurantReservationCore.Db.DataModels;
+using RestaurantReservationServices.DTOs.OrderItemDTOs;
 
 namespace RestaurantReservationServices.Services.OrderItemManagementService
 {
     public interface IOrderItemService
     {
-        Task GetAllOrderItemsAsync();
-        Task GetOrderItemByIdAsync(int id);
-        Task AddOrderItemAsync(OrderItem orderItem);
-        Task UpdateOrderItemAsync(int id, OrderItem orderItem);
+        Task<List<OrderItemReadDTO>> GetAllOrderItemsAsync();
+        Task<OrderItemReadDTO> GetOrderItemByIdAsync(int id);
+        Task<int> AddOrderItemAsync(OrderItemCreateDTO orderItem);
+        Task UpdateOrderItemAsync(int id, OrderItemUpdateDTO orderItem);
+        Task DeleteOrderItemAsync(int id);
     }
 }
