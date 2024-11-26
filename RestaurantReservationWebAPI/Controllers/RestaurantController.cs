@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantReservationServices.DTOs.RestaurantDTOs;
 using RestaurantReservationServices.Exceptions;
@@ -12,9 +13,11 @@ namespace RestaurantReservationWebAPI.Controllers
     {
 
         private readonly IRestaurantService _restaurantService;
-        public RestaurantController(IRestaurantService restaurantService)
+        private readonly IMapper _mapper;
+        public RestaurantController(IRestaurantService restaurantService, IMapper mapper)
         {
             _restaurantService = restaurantService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -103,13 +106,7 @@ namespace RestaurantReservationWebAPI.Controllers
             try
             {
                 var restaurant = await _restaurantService.GetRestaurantByIdAsync(id);
-                var restaurantToPatch = new RestaurantUpdateDTO()
-                {
-                    Name = restaurant.Name,
-                    Address = restaurant.Address,
-                    PhoneNumber = restaurant.PhoneNumber,
-                    OpeningHours = restaurant.OpeningHours
-                };
+                var restaurantToPatch = _mapper.Map<RestaurantUpdateDTO>(restaurant);
                 patchDoc.ApplyTo(restaurantToPatch, ModelState);
                 if (!TryValidateModel(restaurantToPatch))
                 {
@@ -117,6 +114,24 @@ namespace RestaurantReservationWebAPI.Controllers
                 }
                 await _restaurantService.UpdateRestaurantAsync(id, restaurantToPatch);
                 return NoContent();
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet("{id}/revenue")]
+        public async Task<ActionResult<decimal>> CalculateRestaurantRevenue(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Restaurant Id must be larger than 0");
+            }
+            try
+            {
+                var revenue = await _restaurantService.CalculateRestaurantRevenueAsync(id);
+                return Ok(revenue);
             }
             catch (EntityNotFoundException ex)
             {
