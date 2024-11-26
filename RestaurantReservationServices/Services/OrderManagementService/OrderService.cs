@@ -1,95 +1,62 @@
-﻿using RestaurantReservationCore.Db.DataModels;
+﻿using AutoMapper;
+using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories.OrderManagement;
+using RestaurantReservationServices.DTOs.OrderDTOs;
+using RestaurantReservationServices.Exceptions;
 
 namespace RestaurantReservationServices.Services.OrderManagementService
 {
     public class OrderService: IOrderService
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IMapper _mapper;
 
-        public OrderService(IOrderRepository orderRepository)
+        public OrderService(IOrderRepository orderRepository, IMapper mapper)
         {
             _orderRepository = orderRepository;
+            _mapper = mapper;
         }
 
-        public async Task GetAllOrdersAsync()
+        public async Task<List<OrderReadDTO>> GetAllOrdersAsync()
         {
-            List<Order> orders = await _orderRepository.GetAllAsync();
-            if (!orders.Any())
-            {
-                Console.WriteLine("No orders found");
-                return;
-            }
-            foreach (var order in orders)
-            {
-                Console.WriteLine(order);
-            }
+            var orders = await _orderRepository.GetAllAsync();
+            return _mapper.Map<List<OrderReadDTO>>(orders);
         }
 
-        public async Task GetOrderByIdAsync(int id)
+        public async Task<OrderReadDTO> GetOrderByIdAsync(int id)
         {
-            Order order = await _orderRepository.GetByIdAsync(id);
+            var order = await _orderRepository.GetByIdAsync(id);
             if (order == null)
             {
-                Console.WriteLine("Order not found");
-                return;
+                throw new EntityNotFoundException("Order not found");
             }
-            Console.WriteLine(order);
+            return _mapper.Map<OrderReadDTO>(order);
         }
 
-        public async Task AddOrderAsync(Order order)
+        public async Task<int> AddOrderAsync(OrderCreateDTO order)
         {
-            Order requestedOrder = await _orderRepository.GetByIdAsync(order.OrderId);
-            if (requestedOrder != null)
-            {
-                Console.WriteLine("Order already exists");
-                return;
-            }
-            await _orderRepository.AddAsync(order);
+            var newOrder = _mapper.Map<Order>(order);
+            await _orderRepository.AddAsync(newOrder);
+            return newOrder.OrderId;
         }
 
-        public async Task UpdateOrderAsync(int id, Order order)
+        public async Task UpdateOrderAsync(int id, OrderUpdateDTO order)
         {
-            Order updatedOrder = await _orderRepository.GetByIdAsync(id);
-            if (updatedOrder == null)
-            {
-                Console.WriteLine("Order not found");
-                return;
-            }
-            updatedOrder.OrderDate = order.OrderDate;
-            updatedOrder.TotalAmount = order.TotalAmount;
-            updatedOrder.ReservationId = order.ReservationId;
-            updatedOrder.EmployeeId = order.EmployeeId;
-            await _orderRepository.UpdateAsync(updatedOrder);
+            var orderToUpdate = await _orderRepository.GetByIdAsync(id);
+            _mapper.Map(order, orderToUpdate);
+            await _orderRepository.UpdateAsync(orderToUpdate);
         }
 
         public async Task DeleteOrderAsync(int id)
         {
             var order = await _orderRepository.GetByIdAsync(id);
-            if (order == null)
-            {
-                Console.WriteLine("Order doesn't exist");
-                return;
-            }
             await _orderRepository.DeleteAsync(order);
         }
 
-        public async Task GetOrdersByReservationIdAsync(int reservationId)
+        public async Task<List<OrderReadDTO>> GetOrdersByReservationIdAsync(int reservationId)
         {
-            List<Order> orders = await _orderRepository.GetOrdersByReservationIdAsync(reservationId);
-            if (!orders.Any())
-            {
-                Console.WriteLine("No orders found");
-                return;
-            }
-            foreach (var order in orders)
-            {
-                Console.WriteLine(order);
-                foreach (var item in order.OrderItems)
-                {
-                    Console.WriteLine(item);
-                }
-            }
+            var orders = await _orderRepository.GetOrdersByReservationIdAsync(reservationId);
+            return _mapper.Map<List<OrderReadDTO>>(orders);
         }
     }
 }
