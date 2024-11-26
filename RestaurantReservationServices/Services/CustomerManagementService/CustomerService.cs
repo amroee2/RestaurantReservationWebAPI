@@ -58,5 +58,13 @@ namespace RestaurantReservationServices.Services.CustomerManagementService
             var customers = await _customerRepository.GetCustomersWithBigPartySizeAsync(partySize);
             return _mapper.Map<List<CustomerReadDTO>>(customers);
         }
+
+        public async Task CheckIfEmailAlreadyExists(string email)
+        {
+            if(await _customerRepository.CheckIfEmailAlreadyExists(email))
+            {
+                throw new EmailAlreadyExistsException("Email already exists");
+            }
+        }
     }
 }

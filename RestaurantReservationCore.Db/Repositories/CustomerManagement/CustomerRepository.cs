@@ -45,5 +45,10 @@ namespace RestaurantReservationCore.Db.Repositories.CustomerManagement
             var customers = await _context.Customers.FromSqlRaw("CustomersWithBigPartySize {0}", partySize).ToListAsync();
             return customers;
         }
+
+        public async Task<bool> CheckIfEmailAlreadyExists(string email)
+        {
+            return await _context.Customers.AnyAsync(c => c.Email == email);
+        }
     }
 }

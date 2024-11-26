@@ -50,6 +50,14 @@ namespace RestaurantReservationWebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCustomer(CustomerCreateDTO customerDto)
         {
+            try
+            {
+                await _customerService.CheckIfEmailAlreadyExists(customerDto.Email);
+            }
+            catch (EmailAlreadyExistsException ex)
+            {
+                return Conflict(ex.Message);
+            }
             int customerID = await _customerService.AddCustomerAsync(customerDto);
 
             var response = new
@@ -90,11 +98,16 @@ namespace RestaurantReservationWebAPI.Controllers
             }
             try
             {
+                await _customerService.CheckIfEmailAlreadyExists(customerDto.Email);
                 var customer = await _customerService.GetCustomerByIdAsync(id);
             }
             catch (EntityNotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+            catch (EmailAlreadyExistsException ex)
+            {
+                return Conflict(ex.Message);
             }
             await _customerService.UpdateCustomerAsync(id, customerDto);
             return NoContent();
@@ -109,6 +122,7 @@ namespace RestaurantReservationWebAPI.Controllers
             }
             try
             {
+
                 var customer = await _customerService.GetCustomerByIdAsync(id);
                 var customerToPatch = _mapper.Map<CustomerUpdateDTO>(customer);
                 patchDoc.ApplyTo(customerToPatch, ModelState);
@@ -116,12 +130,17 @@ namespace RestaurantReservationWebAPI.Controllers
                 {
                     return ValidationProblem(ModelState);
                 }
+                await _customerService.CheckIfEmailAlreadyExists(customerToPatch.Email);
                 await _customerService.UpdateCustomerAsync(id, customerToPatch);
                 return NoContent();
             }
             catch (EntityNotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+            catch (EmailAlreadyExistsException ex)
+            {
+                return Conflict(ex.Message);
             }
         }
 
