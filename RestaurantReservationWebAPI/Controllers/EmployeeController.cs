@@ -134,5 +134,12 @@ namespace RestaurantReservationWebAPI.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        [HttpGet("Managers")]
+        public async Task<ActionResult<List<EmployeeReadDTO>>> GetAllManagersAsync()
+        {
+            var managers = await _employeeService.GetAllManagersAsync();
+            return Ok(managers);
+        }
     }
 }
