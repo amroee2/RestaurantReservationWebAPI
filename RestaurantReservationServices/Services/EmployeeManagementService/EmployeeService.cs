@@ -1,98 +1,68 @@
-﻿using RestaurantReservationCore.Db.DataModels;
+﻿using AutoMapper;
+using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories.EmployeeManagement;
+using RestaurantReservationServices.DTOs.EmployeeDTOs;
+using RestaurantReservationServices.Exceptions;
 
 namespace RestaurantReservationServices.Services.EmployeeManagementService
 {
     public class EmployeeService: IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
-
-        public EmployeeService(IEmployeeRepository employeeRepository)
+        private readonly IMapper _mapper;
+        public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper)
         {
             _employeeRepository = employeeRepository;
+            _mapper = mapper;
         }
 
-        public async Task GetAllEmployeesAsync()
+        public async Task<List<EmployeeReadDTO>> GetAllEmployeesAsync()
         {
-            List<Employee> employees = await _employeeRepository.GetAllAsync();
-            if (!employees.Any())
-            {
-                Console.WriteLine("No employees found");
-                return;
-            }
-            foreach (var employee in employees)
-            {
-                Console.WriteLine(employee);
-            }
+            var employees = await _employeeRepository.GetAllAsync();
+            return _mapper.Map<List<EmployeeReadDTO>>(employees);
         }
 
-        public async Task GetEmployeeByIdAsync(int id)
+        public async Task<EmployeeReadDTO> GetEmployeeByIdAsync(int id)
         {
             Employee employee = await _employeeRepository.GetByIdAsync(id);
             if (employee == null)
             {
-                Console.WriteLine("Employee not found");
-                return;
+                throw new EntityNotFoundException("Employee not found");
             }
-            Console.WriteLine(employee);
+            return _mapper.Map<EmployeeReadDTO>(employee);
         }
 
-        public async Task AddEmployeeAsync(Employee employee)
+        public async Task<int> AddEmployeeAsync(EmployeeCreateDTO employee)
         {
-            Employee requestedEmployee1 = await _employeeRepository.GetByIdAsync(employee.EmployeeId);
-            if (requestedEmployee1 != null)
-            {
-                Console.WriteLine("Employee already exists");
-                return;
-            }
-            await _employeeRepository.AddAsync(employee);
+            var newEmployee = _mapper.Map<Employee>(employee);
+            await _employeeRepository.AddAsync(newEmployee);
+            return newEmployee.EmployeeId;
         }
 
-        public async Task UpdateEmployeeAsync(int id, Employee employee)
+        public async Task UpdateEmployeeAsync(int id, EmployeeUpdateDTO employee)
         {
             Employee updatedEmployee = await _employeeRepository.GetByIdAsync(id);
-            if (updatedEmployee == null)
-            {
-                Console.WriteLine("Employee not found");
-                return;
-            }
-            updatedEmployee.FirstName = employee.FirstName;
-            updatedEmployee.LastName = employee.LastName;
-            updatedEmployee.Position = employee.Position;
-            updatedEmployee.RestaurantId = employee.RestaurantId;
+            _mapper.Map(employee, updatedEmployee);
             await _employeeRepository.UpdateAsync(updatedEmployee);
         }
 
         public async Task DeleteEmployeeAsync(int id)
         {
             var employee = await _employeeRepository.GetByIdAsync(id);
-            if (employee == null)
-            {
-                Console.WriteLine("Employee doesn't exist");
-                return;
-            }
             await _employeeRepository.DeleteAsync(employee);
         }
 
-        public async Task GetAllManagersAsync()
+        public async Task<List<EmployeeReadDTO>> GetAllManagersAsync()
         {
             List<Employee> employees = await _employeeRepository.ListAllManagersAsync();
-            if (!employees.Any())
-            {
-                Console.WriteLine("No managers found");
-                return;
-            }
-            foreach (var employee in employees)
-            {
-                Console.WriteLine(employee);
-            }
+            return _mapper.Map<List<EmployeeReadDTO>>(employees);
         }
 
-        public async Task CalculateAverageOrderAmountAsync(int employeeId)
+        public async Task<double> CalculateAverageOrderAmountAsync(int employeeId)
         {
             double totalAmount = await _employeeRepository.GetEmployeeTotalAmountAsync(employeeId);
             int numberOfOrders = await _employeeRepository.GetEmployeeNumberOfOrdersAsync(employeeId);
-            Console.WriteLine(totalAmount / numberOfOrders);
+            return totalAmount / numberOfOrders;
         }
     }
 }
