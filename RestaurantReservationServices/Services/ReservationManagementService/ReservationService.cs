@@ -1,78 +1,55 @@
-﻿using RestaurantReservationCore.Db.DataModels;
+﻿using AutoMapper;
+using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories.ReservationManagement;
 using RestaurantReservationCore.Db.Views;
+using RestaurantReservationServices.DTOs.ReservationDTOs;
+using RestaurantReservationServices.Exceptions;
 
 namespace RestaurantReservationServices.Services.ReservationManagementService
 {
     public class ReservationService: IReservationService
     {
         private readonly IReservationRepository _reservationRepository;
-
-        public ReservationService(IReservationRepository reservationRepository)
+        private readonly IMapper _mapper;
+        public ReservationService(IReservationRepository reservationRepository, IMapper mapper)
         {
             _reservationRepository = reservationRepository;
+            _mapper = mapper;
         }
 
-        public async Task GetAllReservationsAsync()
+        public async Task<List<ReservationReadDTO>> GetAllReservationsAsync()
         {
-            List<Reservation> reservations = await _reservationRepository.GetAllAsync();
-            if (!reservations.Any())
-            {
-                Console.WriteLine("No reservations found");
-                return;
-            }
-            foreach (var reservation in reservations)
-            {
-                Console.WriteLine(reservation);
-            }
+            var reservations = await _reservationRepository.GetAllAsync();
+            return _mapper.Map<List<ReservationReadDTO>>(reservations);
         }
 
-        public async Task GetReservationByIdAsync(int id)
+        public async Task<ReservationReadDTO> GetReservationByIdAsync(int id)
         {
-            Reservation reservation = await _reservationRepository.GetByIdAsync(id);
+            var reservation = await _reservationRepository.GetByIdAsync(id);
             if (reservation == null)
             {
-                Console.WriteLine("Reservation not found");
-                return;
+                throw new EntityNotFoundException("Reservation not found");
             }
-            Console.WriteLine(reservation);
+            return _mapper.Map<ReservationReadDTO>(reservation);
         }
 
-        public async Task AddReservationAsync(Reservation reservation)
+        public async Task<int> AddReservationAsync(ReservationCreateDTO reservation)
         {
-            var existingReservation = await _reservationRepository.GetByIdAsync(reservation.ReservationId);
-            if (existingReservation != null)
-            {
-                Console.WriteLine("Reservation already exists");
-                return;
-            }
-            await _reservationRepository.AddAsync(reservation);
+            var newReservation = _mapper.Map<Reservation>(reservation);
+            await _reservationRepository.AddAsync(newReservation);
+            return newReservation.ReservationId;
         }
 
-        public async Task UpdateReservationAsync(int id, Reservation reservation)
+        public async Task UpdateReservationAsync(int id, ReservationUpdateDTO reservation)
         {
-            var updatedReservation = await _reservationRepository.GetByIdAsync(id);
-            if (updatedReservation == null)
-            {
-                Console.WriteLine("Reservation doesn't exist");
-                return;
-            }
-            updatedReservation.ReservationDate = reservation.ReservationDate;
-            updatedReservation.PartySize = reservation.PartySize;
-            updatedReservation.CustomerId = reservation.CustomerId;
-            updatedReservation.TableId = reservation.TableId;
-            updatedReservation.RestaurantId = reservation.RestaurantId;
-            await _reservationRepository.UpdateAsync(updatedReservation);
+            var reservationToUpdate = await _reservationRepository.GetByIdAsync(id);
+            _mapper.Map(reservation, reservationToUpdate);
+            await _reservationRepository.UpdateAsync(reservationToUpdate);
         }
 
         public async Task DeleteReservationAsync(int id)
         {
             var reservation = await _reservationRepository.GetByIdAsync(id);
-            if (reservation == null)
-            {
-                Console.WriteLine("Reservation doesn't exist");
-                return;
-            }
             await _reservationRepository.DeleteAsync(reservation);
         }
 

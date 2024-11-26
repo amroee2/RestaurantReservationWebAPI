@@ -7,10 +7,12 @@ using RestaurantReservationCore.Db.Repositories;
 using RestaurantReservationCore.Db.Repositories.CustomerManagement;
 using RestaurantReservationCore.Db.Repositories.EmployeeManagement;
 using RestaurantReservationCore.Db.Repositories.MenuItemManagement;
+using RestaurantReservationCore.Db.Repositories.ReservationManagement;
 using RestaurantReservationCore.Db.Repositories.RestaurantManagement;
 using RestaurantReservationServices.Services.CustomerManagementService;
 using RestaurantReservationServices.Services.EmployeeManagementService;
 using RestaurantReservationServices.Services.MenuItemManagementService;
+using RestaurantReservationServices.Services.ReservationManagementService;
 using RestaurantReservationServices.Services.RestaurantManagementService;
 using RestaurantReservationServices.Services.TableManagementService;
 
@@ -42,7 +44,8 @@ builder.Services.AddScoped<IMenuItemService, MenuItemService>();
 builder.Services.AddScoped<IMenuItemRepository, MenuItemRepository>();
 builder.Services.AddScoped<ITableService, TableService>();
 builder.Services.AddScoped<IRepository<Table>, TableRepository>();
-
+builder.Services.AddScoped<IReservationService, ReservationService>();
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
