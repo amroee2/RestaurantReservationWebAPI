@@ -1,74 +1,54 @@
-﻿using RestaurantReservationCore.Db.DataModels;
+﻿using AutoMapper;
+using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories;
+using RestaurantReservationServices.DTOs.TableDTOs;
+using RestaurantReservationServices.Exceptions;
 
 namespace RestaurantReservationServices.Services.TableManagementService
 {
     public class TableService: ITableService
     {
         private readonly IRepository<Table> _tableRepository;
-
-        public TableService(IRepository<Table> tableRepository)
+        private readonly IMapper _mapper;
+        public TableService(IRepository<Table> tableRepository, IMapper mapper)
         {
             _tableRepository = tableRepository;
+            _mapper = mapper;
         }
 
-        public async Task GetAllTablesAsync()
+        public async Task<List<TableReadDTO>> GetAllTablesAsync()
         {
             var tables = await _tableRepository.GetAllAsync();
-            if (!tables.Any())
-            {
-                Console.WriteLine("There are currently no tables");
-                return;
-            }
-            foreach (var table in tables)
-            {
-                Console.WriteLine(table);
-            }
+            return _mapper.Map<List<TableReadDTO>>(tables);
         }
 
-        public async Task GetTableByIdAsync(int id)
+        public async Task<TableReadDTO> GetTableByIdAsync(int id)
         {
             var table = await _tableRepository.GetByIdAsync(id);
             if (table == null)
             {
-                Console.WriteLine("Table doesn't exist");
-                return;
+                throw new EntityNotFoundException("Table doesn't exist");
             }
-            Console.WriteLine(table);
+            return _mapper.Map<TableReadDTO>(table);
         }
 
-        public async Task AddTableAsync(Table table)
+        public async Task<int> AddTableAsync(TableCreateDTO table)
         {
-            var existingTable = await _tableRepository.GetByIdAsync(table.TableId);
-            if (existingTable != null)
-            {
-                Console.WriteLine("Table already exists");
-                return;
-            }
-            await _tableRepository.AddAsync(table);
+            var newTable = _mapper.Map<Table>(table);
+            await _tableRepository.AddAsync(newTable);
+            return newTable.TableId;
         }
 
-        public async Task UpdateTableAsync(int id, Table table)
+        public async Task UpdateTableAsync(int id, TableUpdateDTO table)
         {
-            var updatedTable = await _tableRepository.GetByIdAsync(id);
-            if (updatedTable == null)
-            {
-                Console.WriteLine("Table doesn't exist");
-                return;
-            }
-            updatedTable.Capacity = table.Capacity;
-            updatedTable.RestaurantId = table.RestaurantId;
-            await _tableRepository.UpdateAsync(updatedTable);
+            var tableToUpdate = await _tableRepository.GetByIdAsync(id);
+            _mapper.Map(table, tableToUpdate);
+            await _tableRepository.UpdateAsync(tableToUpdate);
         }
 
         public async Task DeleteTableAsync(int id)
         {
             var table = await _tableRepository.GetByIdAsync(id);
-            if (table == null)
-            {
-                Console.WriteLine("Table doesn't exist");
-                return;
-            }
             await _tableRepository.DeleteAsync(table);
         }
     }

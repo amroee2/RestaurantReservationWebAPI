@@ -2,6 +2,8 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using RestaurantReservationCore.Db;
+using RestaurantReservationCore.Db.DataModels;
+using RestaurantReservationCore.Db.Repositories;
 using RestaurantReservationCore.Db.Repositories.CustomerManagement;
 using RestaurantReservationCore.Db.Repositories.EmployeeManagement;
 using RestaurantReservationCore.Db.Repositories.MenuItemManagement;
@@ -10,6 +12,7 @@ using RestaurantReservationServices.Services.CustomerManagementService;
 using RestaurantReservationServices.Services.EmployeeManagementService;
 using RestaurantReservationServices.Services.MenuItemManagementService;
 using RestaurantReservationServices.Services.RestaurantManagementService;
+using RestaurantReservationServices.Services.TableManagementService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +40,8 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IMenuItemService, MenuItemService>();
 builder.Services.AddScoped<IMenuItemRepository, MenuItemRepository>();
+builder.Services.AddScoped<ITableService, TableService>();
+builder.Services.AddScoped<IRepository<Table>, TableRepository>();
 
 var app = builder.Build();
 
