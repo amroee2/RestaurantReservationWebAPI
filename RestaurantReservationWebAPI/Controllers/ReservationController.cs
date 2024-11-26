@@ -146,5 +146,24 @@ namespace RestaurantReservationWebAPI.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        [HttpGet("Customer/{customerId}")]
+        public async Task<ActionResult<IEnumerable<ReservationReadDTO>>> GetReservationsByCustomerId(int customerId)
+        {
+            if (customerId <= 0)
+            {
+                return BadRequest("Customer Id must be larger than 0");
+            }
+            try
+            {
+                var customer = await _customerService.GetCustomerByIdAsync(customerId);
+                var reservations = await _reservationService.GetReservationsByCustomerIdAsync(customerId);
+                return Ok(reservations);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

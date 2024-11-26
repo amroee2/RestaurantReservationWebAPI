@@ -53,21 +53,10 @@ namespace RestaurantReservationServices.Services.ReservationManagementService
             await _reservationRepository.DeleteAsync(reservation);
         }
 
-        public async Task GetReservationsByCustomerIdAsync(int customerId)
+        public async Task<List<ReservationReadDTO>> GetReservationsByCustomerIdAsync(int customerId)
         {
-            List<Reservation> reservations = await _reservationRepository.GetReservationsByCustomerIdAsync(customerId);
-            if (!reservations.Any())
-            {
-                Console.WriteLine("No reservations found");
-                return;
-            }
-            foreach (var reservation in reservations)
-            {
-                if (reservation.CustomerId == customerId)
-                {
-                    Console.WriteLine(reservation);
-                }
-            }
+            var reservations = await _reservationRepository.GetReservationsByCustomerIdAsync(customerId);
+            return _mapper.Map<List<ReservationReadDTO>>(reservations);
         }
 
         public async Task GetCustomerReservationsByRestaurantsAsync()

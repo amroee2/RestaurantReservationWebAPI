@@ -10,5 +10,6 @@ namespace RestaurantReservationServices.Services.ReservationManagementService
         Task<int> AddReservationAsync(ReservationCreateDTO reservation);
         Task UpdateReservationAsync(int id, ReservationUpdateDTO reservation);
         Task DeleteReservationAsync(int id);
+        Task<List<ReservationReadDTO>> GetReservationsByCustomerIdAsync(int customerId);
     }
 }
