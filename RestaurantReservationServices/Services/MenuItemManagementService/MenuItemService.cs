@@ -1,90 +1,62 @@
-﻿using RestaurantReservationCore.Db.DataModels;
+﻿using AutoMapper;
+using RestaurantReservationCore.Db.DataModels;
 using RestaurantReservationCore.Db.Repositories.MenuItemManagement;
+using RestaurantReservationServices.DTOs.MenuItemDTOs;
+using RestaurantReservationServices.Exceptions;
 
 namespace RestaurantReservationServices.Services.MenuItemManagementService
 {
     public class MenuItemService: IMenuItemService
     {
         private readonly IMenuItemRepository _menuItemRepository;
+        private readonly IMapper _mapper;
 
-        public MenuItemService(IMenuItemRepository menuItemRepository)
+        public MenuItemService(IMenuItemRepository menuItemRepository, IMapper mapper)
         {
             _menuItemRepository = menuItemRepository;
+            _mapper = mapper;
         }
 
-        public async Task GetAllMenuItemsAsync()
+        public async Task<List<MenuItemReadDTO>> GetAllMenuItemsAsync()
         {
-            List<MenuItem> menuItems = await _menuItemRepository.GetAllAsync();
-            if (!menuItems.Any())
-            {
-                Console.WriteLine("No menu items found");
-            }
-            foreach (var menuItem in menuItems)
-            {
-                Console.WriteLine(menuItem);
-            }
+            var menuItems = await _menuItemRepository.GetAllAsync();
+            return _mapper.Map<List<MenuItemReadDTO>>(menuItems);
         }
 
-        public async Task GetMenuItemByIdAsync(int id)
+        public async Task<MenuItemReadDTO> GetMenuItemByIdAsync(int id)
         {
-            MenuItem menuItem = await _menuItemRepository.GetByIdAsync(id);
+            var menuItem = await _menuItemRepository.GetByIdAsync(id);
             if (menuItem == null)
             {
-                Console.WriteLine("Menu item not found");
-                return;
+                throw new EntityNotFoundException("Menu Item Not Found");
             }
-            Console.WriteLine(menuItem);
+            return _mapper.Map<MenuItemReadDTO>(menuItem);
         }
 
-        public async Task AddMenuItemAsync(MenuItem menuItem)
+        public async Task<int> AddMenuItemAsync(MenuItemCreateDTO menuItem)
         {
-            MenuItem requestedMenuItem = await _menuItemRepository.GetByIdAsync(menuItem.MenuItemId);
-            if (requestedMenuItem != null)
-            {
-                Console.WriteLine("Menu item already exists");
-                return;
-            }
-            await _menuItemRepository.AddAsync(menuItem);
+            var newMenuItem = _mapper.Map<MenuItem>(menuItem);
+            await _menuItemRepository.AddAsync(newMenuItem);
+            return newMenuItem.MenuItemId;
         }
 
-        public async Task UpdateMenuItemAsync(int id, MenuItem menuItem)
+        public async Task UpdateMenuItemAsync(int id, MenuItemUpdateDTO menuItem)
         {
-            MenuItem updatedItem = await _menuItemRepository.GetByIdAsync(id);
-            if (updatedItem == null)
-            {
-                Console.WriteLine("Menu Item not found");
-                return;
-            }
-            updatedItem.Name = menuItem.Name;
-            updatedItem.Price = menuItem.Price;
-            updatedItem.Description = menuItem.Description;
-            updatedItem.RestaurantId = menuItem.RestaurantId;
-            await _menuItemRepository.UpdateAsync(updatedItem);
+            var menuItemToUpdate = await _menuItemRepository.GetByIdAsync(id);
+            _mapper.Map(menuItem, menuItemToUpdate);
+            await _menuItemRepository.UpdateAsync(menuItemToUpdate);
         }
 
         public async Task DeleteMenuItemAsync(int id)
         {
             var menuItem = await _menuItemRepository.GetByIdAsync(id);
-            if (menuItem == null)
-            {
-                Console.WriteLine("Menu item doesn't exist");
-                return;
-            }
             await _menuItemRepository.DeleteAsync(menuItem);
         }
 
-        public async Task GetMenuItemsByReservationIdAsync(int reservationId)
+        public async Task<List<MenuItemReadDTO>> GetMenuItemsByReservationIdAsync(int reservationId)
         {
             var menuItems = await _menuItemRepository.GetMenuItemsByReservationIdAsync(reservationId);
-            if (!menuItems.Any())
-            {
-                Console.WriteLine("No menu items found");
-                return;
-            }
-            foreach (var menuItem in menuItems)
-            {
-                Console.WriteLine(menuItem);
-            }
+            return _mapper.Map<List<MenuItemReadDTO>>(menuItems);
         }
     }
 }
