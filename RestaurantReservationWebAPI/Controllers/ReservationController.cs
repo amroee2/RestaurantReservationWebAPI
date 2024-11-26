@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using RestaurantReservationServices.DTOs.MenuItemDTOs;
 using RestaurantReservationServices.DTOs.ReservationDTOs;
 using RestaurantReservationServices.Exceptions;
 using RestaurantReservationServices.Services.CustomerManagementService;
+using RestaurantReservationServices.Services.MenuItemManagementService;
 using RestaurantReservationServices.Services.ReservationManagementService;
 using RestaurantReservationServices.Services.RestaurantManagementService;
 using RestaurantReservationServices.Services.TableManagementService;
@@ -18,16 +20,18 @@ namespace RestaurantReservationWebAPI.Controllers
         private readonly ICustomerService _customerService;
         private readonly ITableService _tableService;
         private readonly IRestaurantService _restaurantService;
+        private readonly IMenuItemService _menuItemService;
         private readonly IMapper _mapper;
 
         public ReservationController(IReservationService reservationService, ICustomerService customerService,
-            ITableService tableService, IMapper mapper, IRestaurantService restaurantService)
+            ITableService tableService, IMapper mapper, IRestaurantService restaurantService, IMenuItemService menuItemService)
         {
             _reservationService = reservationService;
             _customerService = customerService;
             _tableService = tableService;
             _mapper = mapper;
             _restaurantService = restaurantService;
+            _menuItemService = menuItemService;
         }
 
         [HttpGet]
@@ -148,7 +152,7 @@ namespace RestaurantReservationWebAPI.Controllers
         }
 
         [HttpGet("Customer/{customerId}")]
-        public async Task<ActionResult<IEnumerable<ReservationReadDTO>>> GetReservationsByCustomerId(int customerId)
+        public async Task<ActionResult<List<ReservationReadDTO>>> GetReservationsByCustomerId(int customerId)
         {
             if (customerId <= 0)
             {
@@ -159,6 +163,26 @@ namespace RestaurantReservationWebAPI.Controllers
                 var customer = await _customerService.GetCustomerByIdAsync(customerId);
                 var reservations = await _reservationService.GetReservationsByCustomerIdAsync(customerId);
                 return Ok(reservations);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet("{id}/menu-items")]
+        public async Task<ActionResult<List<MenuItemReadDTO>>>
+            GetMenuItemsByReservationId(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Reservation Id must be larger than 0");
+            }
+            try
+            {
+                var reservation = await _reservationService.GetReservationByIdAsync(id);
+                var menuItems = await _menuItemService.GetMenuItemsByReservationIdAsync(id);
+                return Ok(menuItems);
             }
             catch (EntityNotFoundException ex)
             {
