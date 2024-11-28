@@ -27,7 +27,7 @@ namespace RestaurantReservationWebAPI.TokenGenerators
                 _configuration["Authentication:Audience"],
                 claims,
                 DateTime.UtcNow,
-                DateTime.UtcNow.AddMinutes(15),
+                DateTime.UtcNow.AddDays(1),
                 signingCredentials
             );
             var tokenHandler = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
