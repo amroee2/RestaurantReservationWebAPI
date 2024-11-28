@@ -124,15 +124,28 @@ namespace RestaurantReservationWebAPI.Controllers
             }
             try
             {
-
                 var customer = await _customerService.GetCustomerByIdAsync(id);
+                if (customer == null)
+                {
+                    return NotFound("Customer not found.");
+                }
+
                 var customerToPatch = _mapper.Map<CustomerUpdateDTO>(customer);
                 patchDoc.ApplyTo(customerToPatch, ModelState);
+
                 if (!TryValidateModel(customerToPatch))
                 {
                     return ValidationProblem(ModelState);
                 }
-                await _customerService.CheckIfEmailAlreadyExists(customerToPatch.Email);
+
+                var isEmailUpdated = patchDoc.Operations
+                    .Any(op => op.path.Equals("/email", StringComparison.OrdinalIgnoreCase));
+
+                if (isEmailUpdated)
+                {
+                    await _customerService.CheckIfEmailAlreadyExists(customerToPatch.Email);
+                }
+
                 await _customerService.UpdateCustomerAsync(id, customerToPatch);
                 return NoContent();
             }
@@ -145,6 +158,7 @@ namespace RestaurantReservationWebAPI.Controllers
                 return Conflict(ex.Message);
             }
         }
+
 
         [HttpGet("bigPartySize/{partySize}")]
         public async Task<ActionResult> GetCustomersWithBigPartySize(int partySize)
