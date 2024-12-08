@@ -14,14 +14,6 @@ namespace RestaurantReservationCore.Db
         public RestaurantReservationDbContext(DbContextOptions<RestaurantReservationDbContext> options) : base(options)
         {
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(
-                    @"Server=(localdb)\mssqllocaldb;Database=RestaurantReservationSystem;Integrated Security=True");
-            }
-        }
 
         public DbSet<CustomerReservationsByRestaurant> CustomerReservationsByRestaurants { get; set; }
         public DbSet<Restaurant> Restaurants { get; set; }

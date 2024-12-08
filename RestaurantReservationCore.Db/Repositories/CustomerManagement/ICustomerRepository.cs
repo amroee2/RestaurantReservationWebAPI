@@ -5,5 +5,6 @@ namespace RestaurantReservationCore.Db.Repositories.CustomerManagement
     public interface ICustomerRepository : IRepository<Customer>
     {
         Task<List<Customer>> GetCustomersWithBigPartySizeAsync(int partySize);
+        Task<bool> CheckIfEmailAlreadyExists(string email);
     }
 }
