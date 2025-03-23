@@ -18,3 +18,5 @@ A **RESTful API** for managing restaurant reservations, built using **ASP.NET Co
 - **JWT Authentication**
 - **SMTP for Email Notifications**
 - **xUnit for Unit Testing**
+
+![image](https://github.com/user-attachments/assets/43833c6f-ae49-49af-862c-c1e3b29ad3fd)
